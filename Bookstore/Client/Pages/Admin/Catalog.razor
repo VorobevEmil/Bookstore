@@ -1,0 +1,76 @@
+﻿@page "/admin/catalog/{id:int?}"
+@attribute [Authorize(Roles = "Admin")]
+@inject HttpClient Http
+
+
+@if (Catalogs != null)
+{
+    <BaseGenericForm TEntity="CatalogModel" Title="Категорию" ControllerName="Catalog" Id="Id" Context="model" SaveMethod="Save">
+        <MudTextField Label="Название категории" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
+
+        <MudDivider Class="mt-10" />
+        <MudText>Выберите подраздел создаваемой категории</MudText>
+        <MudTreeView Items="TreeItems" @bind-ActivatedValue="ActivatedValue">
+            <ItemTemplate>
+                <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
+            </ItemTemplate>
+        </MudTreeView>
+
+    </BaseGenericForm>
+}
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private TreeItemData ActivatedValue { get; set; }
+    private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
+
+    public class TreeItemData
+    {
+        public int Id { get; set; }
+        public string? Title { get; set; }
+
+        public HashSet<TreeItemData>? TreeItems { get; set; }
+
+        public TreeItemData(int id, string? title)
+        {
+            Id = id;
+            Title = title;
+        }
+    }
+
+    public List<CatalogModel>? Catalogs { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
+        SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
+
+    }
+
+    private void SetTreeItems(List<CatalogModel> catalogs, HashSet<TreeItemData> treeItems)
+    {
+        foreach (var catalog in catalogs.Where(t => t.Catalogs?.Select(x => x.CatalogModelId).Contains(t.Id) ?? true))
+        {
+            if (catalog.Catalogs == null)
+            {
+                treeItems.Add(new TreeItemData(catalog.Id, catalog.Title));
+            }
+            else
+            {
+                var item = new TreeItemData(catalog.Id, catalog.Title)
+                    {
+                        TreeItems = new HashSet<TreeItemData>()
+                    };
+                treeItems.Add(item);
+                SetTreeItems(catalog.Catalogs, item.TreeItems);
+            }
+        }
+    }
+
+    private async Task Save(CatalogModel model)
+    {
+        if (ActivatedValue != null)
+            model.CatalogModelId = ActivatedValue.Id;
+        await Http.PostAsJsonAsync("api/Catalog/Save", model);
+    }
+}

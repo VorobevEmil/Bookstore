@@ -1,0 +1,13 @@
+﻿@page "/admin/author/{id:int?}"
+@attribute [Authorize(Roles = "Admin")]
+
+<BaseGenericForm TEntity="AuthorModel" Title="Автора" ControllerName="Author" Id="Id" Context="model">
+    <MudTextField Label="Полное имя" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
+    <MudTextField Label="Об авторе" Class="mt-3" @bind-Value="model.AboutAuthor" For="@(() => model.AboutAuthor)" Lines="5" />
+
+</BaseGenericForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}

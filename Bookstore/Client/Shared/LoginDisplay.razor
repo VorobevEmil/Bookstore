@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<AuthorizeView>
+    <Authorized>
+        <MudLink Color="Color.Dark" Href="authentication/profile">Здравствуйте, @context.User.Identity.Name!</MudLink>
+        <MudButton OnClick="BeginSignOut">Выйти</MudButton>
+    </Authorized>
+    <NotAuthorized>
+        <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Войти", href: "authentication/login", icon: Icons.Filled.Login),
+        new BreadcrumbItem("Регистрация", href: "authentication/register", icon: Icons.Filled.HowToReg)
+    };
+}

@@ -1,0 +1,64 @@
+﻿@typeparam TEntity where TEntity : BaseEntity, new()
+@using System.ComponentModel.DataAnnotations
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+@if (Entity != null)
+{
+    <EditForm Model="@Entity" OnValidSubmit="SaveEntity">
+        <DataAnnotationsValidator />
+        <MudText Class="mt-16" Typo="Typo.h4">@(Id == default ? "Добавить" : "Редактировать") @Title</MudText>
+        <MudGrid>
+            <MudItem xs="12" sm="7">
+                <MudCard>
+                    <MudCardContent>
+                        @ChildContent(Entity)
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Сохранить</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
+@code {
+    public TEntity? Entity { get; set; }
+    [Parameter]
+    public string? Title { get; set; }
+    [Parameter]
+    public string? ControllerName { get; set; }
+    [Parameter]
+    public RenderFragment<TEntity>? ChildContent { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    [Parameter]
+    public EventCallback<TEntity> SaveMethod { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id == default)
+            Entity = new TEntity();
+        else
+        {
+            HttpResponseMessage response = await Http.GetAsync($"api/{ControllerName}/GetById/{Id}");
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                Entity = await response.Content.ReadFromJsonAsync<TEntity>();
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/404");
+            }
+        }
+    }
+
+    private async Task SaveEntity()
+    {
+        if (SaveMethod.HasDelegate)
+            SaveMethod.InvokeAsync(Entity);
+        else
+            await Http.PostAsJsonAsync($"api/{ControllerName}/Save", Entity);
+        NavigationManager.NavigateTo("/");
+    }
+}
