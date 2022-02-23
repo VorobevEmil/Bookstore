@@ -1,16 +1,16 @@
 ﻿@page "/admin/catalog/{id:int?}"
 @attribute [Authorize(Roles = "Admin")]
 @inject HttpClient Http
-
+@using Client.UIHelper
 
 @if (Catalogs != null)
 {
-    <BaseGenericForm TEntity="CatalogModel" Title="Категорию" ControllerName="Catalog" Id="Id" Context="model" SaveMethod="Save">
+    <BaseGenericForm TEntity="CatalogModel" Title="Категорию" ControllerName="Catalog" Id="Id" Context="model" @ref="catalogForm">
         <MudTextField Label="Название категории" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
 
         <MudDivider Class="mt-10" />
         <MudText>Выберите подраздел создаваемой категории</MudText>
-        <MudTreeView Items="TreeItems" @bind-ActivatedValue="ActivatedValue">
+        <MudTreeView T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetCategoryId">
             <ItemTemplate>
                 <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
             </ItemTemplate>
@@ -22,22 +22,9 @@
     [Parameter]
     public int Id { get; set; }
 
-    private TreeItemData ActivatedValue { get; set; }
+    private BaseGenericForm<CatalogModel> catalogForm;
+
     private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
-
-    public class TreeItemData
-    {
-        public int Id { get; set; }
-        public string? Title { get; set; }
-
-        public HashSet<TreeItemData>? TreeItems { get; set; }
-
-        public TreeItemData(int id, string? title)
-        {
-            Id = id;
-            Title = title;
-        }
-    }
 
     public List<CatalogModel>? Catalogs { get; set; }
     protected override async Task OnInitializedAsync()
@@ -67,10 +54,8 @@
         }
     }
 
-    private async Task Save(CatalogModel model)
+    private void SetCategoryId(TreeItemData item)
     {
-        if (ActivatedValue != null)
-            model.CatalogModelId = ActivatedValue.Id;
-        await Http.PostAsJsonAsync("api/Catalog/Save", model);
+        catalogForm.Entity.CatalogModelId = item?.Id ?? null;
     }
 }

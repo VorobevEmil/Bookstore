@@ -1,0 +1,92 @@
+﻿@page "/admin/book/{id:int?}"
+@attribute [Authorize(Roles = "Admin")]
+@inject HttpClient Http
+@using Client.UIHelper
+
+@if (Authors != null && PublishingHouses != null && Catalogs != null)
+{
+    <BaseGenericForm TEntity="BookModel" Title="Книгу" ControllerName="Book" Id="Id" Context="model" ShowBlockError="true" @ref="BookForm">
+        <MudTextField Label="Название книги" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
+
+        <MudTextField Label="Описание" Class="mt-3" @bind-Value="model.AboutProduct" For="@(() => model.AboutProduct)" />
+
+        <MudTextField Label="Аннотация" Class="mt-3" @bind-Value="model.Annotation" For="@(() => model.Annotation)" />
+
+        <MudSelect T="int?" Placeholder="Выберите автора" Class="mt-3" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.AuthorId" For="@(() => model.AuthorId)">
+            @foreach (var author in Authors)
+            {
+                <MudSelectItem Value="(int?)author.Id">@author.Title</MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudSelect T="int?" Placeholder="Выберите издание" Class="mt-3" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.PublishingHouseId" For="@(() => model.PublishingHouseId)">
+            @foreach (var publishingHouse in PublishingHouses)
+            {
+                <MudSelectItem Value="(int?)publishingHouse.Id">@publishingHouse.Title</MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudText Class="mt-3">Выберите категорию</MudText>
+        <MudTreeView T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetCategoryId">
+            <ItemTemplate>
+                <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
+            </ItemTemplate>
+        </MudTreeView>
+
+        <MudTextField Label="Количество страниц" Class="mt-3" Variant="Variant.Text" Adornment="Adornment.Start" @bind-Value="model.NumberPages" For="@(() => model.NumberPages)" />
+
+        <MudTextField Label="Год издания" Class="mt-3" Variant="Variant.Text" Adornment="Adornment.Start" @bind-Value="model.YearPublication" For="@(() => model.YearPublication)" />
+
+        <MudTextField Label="Цена" Class="mt-3" Variant="Variant.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" @bind-Value="model.Price" For="@(() => model.Price)" />
+
+    </BaseGenericForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public List<AuthorModel>? Authors { get; set; }
+    public List<PublishingHouseModel>? PublishingHouses { get; set; }
+    public List<CatalogModel>? Catalogs { get; set; }
+
+    private BaseGenericForm<BookModel> BookForm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Authors = await Http.GetFromJsonAsync<List<AuthorModel>>("api/Author/GetEntities");
+        PublishingHouses = await Http.GetFromJsonAsync<List<PublishingHouseModel>>("api/PublishingHouse/GetEntities");
+        Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
+
+        SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
+
+    }
+
+    private TreeItemData? ActivatedValue { get; set; }
+    private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
+
+    private void SetTreeItems(List<CatalogModel> catalogs, HashSet<TreeItemData> treeItems)
+    {
+        foreach (var catalog in catalogs.Where(t => t.Catalogs?.Select(x => x.CatalogModelId).Contains(t.Id) ?? true))
+        {
+            if (catalog.Catalogs == null)
+            {
+                treeItems.Add(new TreeItemData(catalog.Id, catalog.Title));
+            }
+            else
+            {
+                var item = new TreeItemData(catalog.Id, catalog.Title)
+                    {
+                        TreeItems = new HashSet<TreeItemData>()
+                    };
+                treeItems.Add(item);
+                SetTreeItems(catalog.Catalogs, item.TreeItems);
+            }
+        }
+    }
+
+    private void SetCategoryId(TreeItemData item)
+    {
+        BookForm.Entity.CatalogId = item?.Id ?? null;
+    }
+}

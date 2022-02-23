@@ -19,6 +19,17 @@
                     </MudCardActions>
                 </MudCard>
             </MudItem>
+            @if (ShowBlockError)
+            {
+                <MudItem xs="12" sm="5">
+                    <MudPaper Class="pa-4 mud-height-full">
+                        <MudText Typo="Typo.subtitle2">Краткое описание проверки</MudText>
+                        <MudText Color="@Color.Error">
+                            <ValidationSummary />
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+            }
         </MudGrid>
     </EditForm>
 }
@@ -33,7 +44,7 @@
     [Parameter]
     public int Id { get; set; }
     [Parameter]
-    public EventCallback<TEntity> SaveMethod { get; set; }
+    public bool ShowBlockError { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,10 +66,7 @@
 
     private async Task SaveEntity()
     {
-        if (SaveMethod.HasDelegate)
-            SaveMethod.InvokeAsync(Entity);
-        else
-            await Http.PostAsJsonAsync($"api/{ControllerName}/Save", Entity);
+        await Http.PostAsJsonAsync($"api/{ControllerName}/Save", Entity);
         NavigationManager.NavigateTo("/");
     }
 }
