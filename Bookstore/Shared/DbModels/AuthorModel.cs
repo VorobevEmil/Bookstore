@@ -13,5 +13,7 @@ namespace Bookstore.Shared.DbModels
         public override string? Title { get; set; }
         public List<BookModel>? Books { get; set; }
         public string? AboutAuthor { get; set; }
+
+        public byte[]? ImageData { get; set; }
     }
 }

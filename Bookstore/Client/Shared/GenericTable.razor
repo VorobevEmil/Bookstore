@@ -1,0 +1,47 @@
+﻿@typeparam TEntity where TEntity : BaseEntity, new()
+
+<MudTable Items="@Entities" Hover="true" Filter="new Func<TEntity,bool>(FilterFunc)" Class="mt-10">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">@Title</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        @ChildHeaderContent
+    </HeaderContent>
+    <RowTemplate>
+        @ChildRowTemplate(context)
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager RowsPerPageString="Строк на странице" />
+    </PagerContent>
+</MudTable>
+<div class="d-flex flex-wrap mt-4">
+    <MudSpacer />
+    <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" Link="@($"Admin/{LinkEdit}")">Создать</MudButton>
+</div>
+
+@code {
+    [Parameter]
+    public string LinkEdit { get; set; }
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public List<TEntity> Entities { get; set; }
+    [Parameter]
+    public RenderFragment ChildHeaderContent { get; set; }
+
+    [Parameter]
+    public RenderFragment<TEntity> ChildRowTemplate { get; set; }
+
+    private string searchString = "";
+
+    private bool FilterFunc(TEntity element)
+    {
+        if (string.IsNullOrEmpty(searchString))
+            return true;
+        if (element.Title.Contains(searchString))
+            return true;
+        return false;
+    }
+}

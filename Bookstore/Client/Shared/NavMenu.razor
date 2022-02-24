@@ -1,3 +1,8 @@
 ﻿<MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Главная</MudNavLink>
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <MudNavLink Href="/Admin" Match="NavLinkMatch.Prefix">Панель администратора</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
 </MudNavMenu>

@@ -29,5 +29,7 @@ namespace Bookstore.Shared.DbModels
         public int? YearPublication { get; set; }
         [Required(ErrorMessage = "Введите цену")]
         public int? Price { get; set; }
+
+        public byte[]? ImageData { get; set; }
     }
 }

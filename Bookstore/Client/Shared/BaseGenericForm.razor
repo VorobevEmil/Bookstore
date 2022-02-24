@@ -16,6 +16,10 @@
                     </MudCardContent>
                     <MudCardActions>
                         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Сохранить</MudButton>
+                        @if (Id != default)
+                        {
+                            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" OnClick="DeleteEntity">Удалить</MudButton>
+                        }
                     </MudCardActions>
                 </MudCard>
             </MudItem>
@@ -67,6 +71,12 @@
     private async Task SaveEntity()
     {
         await Http.PostAsJsonAsync($"api/{ControllerName}/Save", Entity);
+        NavigationManager.NavigateTo("/");
+    }
+
+    private async Task DeleteEntity()
+    {
+        await Http.PostAsJsonAsync($"api/{ControllerName}/Delete", Entity);
         NavigationManager.NavigateTo("/");
     }
 }

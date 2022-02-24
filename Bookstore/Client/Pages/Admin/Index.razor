@@ -1,0 +1,74 @@
+﻿@page "/Admin"
+@attribute [Authorize]
+@inject HttpClient Http
+
+<PageTitle>Панель Администратора</PageTitle>
+
+@if(Authors != null && PublishingHouses != null && Catalogs != null && Books != null)
+{
+    <GenericTable TEntity="AuthorModel" Entities="Authors" Title="Авторы" LinkEdit="Author">
+        <ChildHeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Полное Имя</MudTh>
+            <MudTh></MudTh>
+        </ChildHeaderContent>
+        <ChildRowTemplate Context="model">
+            <MudTd DataLabel="Id">@model.Id</MudTd>
+            <MudTd DataLabel="Полное Имя">@model.Title</MudTd>
+            <MudTd><MudLink Href="@($"/Admin/Author/{model.Id}")">Ред.</MudLink></MudTd>
+        </ChildRowTemplate>
+    </GenericTable>
+
+    <GenericTable TEntity="PublishingHouseModel" Entities="PublishingHouses" Title="Издательства" LinkEdit="PublishingHouse">
+        <ChildHeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Название издательства</MudTh>
+            <MudTh></MudTh>
+        </ChildHeaderContent>
+        <ChildRowTemplate Context="model">
+            <MudTd DataLabel="Id">@model.Id</MudTd>
+            <MudTd DataLabel="Название издательства">@model.Title</MudTd>
+            <MudTd><MudLink Href="@($"/Admin/PublishingHouse/{model.Id}")">Ред.</MudLink></MudTd>
+        </ChildRowTemplate>
+    </GenericTable>
+
+    <GenericTable TEntity="CatalogModel" Entities="Catalogs" Title="Категории" LinkEdit="Catalog">
+        <ChildHeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Название категории</MudTh>
+            <MudTh></MudTh>
+        </ChildHeaderContent>
+        <ChildRowTemplate Context="model">
+            <MudTd DataLabel="Id">@model.Id</MudTd>
+            <MudTd DataLabel="Название категории">@model.Title</MudTd>
+            <MudTd><MudLink Href="@($"/Admin/Catalog/{model.Id}")">Ред.</MudLink></MudTd>
+        </ChildRowTemplate>
+    </GenericTable>
+
+    <GenericTable TEntity="BookModel" Entities="Books" Title="Книги" LinkEdit="Book">
+        <ChildHeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Название книги</MudTh>
+            <MudTh></MudTh>
+        </ChildHeaderContent>
+        <ChildRowTemplate Context="model">
+            <MudTd DataLabel="Id">@model.Id</MudTd>
+            <MudTd DataLabel="Название книги">@model.Title</MudTd>
+            <MudTd><MudLink Href="@($"/Admin/Book/{model.Id}")">Ред.</MudLink></MudTd>
+        </ChildRowTemplate>
+    </GenericTable>
+}
+
+@code {
+    public List<AuthorModel>? Authors { get; set; }
+    public List<PublishingHouseModel>? PublishingHouses { get; set; }
+    public List<CatalogModel>? Catalogs { get; set; }
+    public List<BookModel>? Books { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Authors = await Http.GetFromJsonAsync<List<AuthorModel>>("api/Author/GetEntities");
+        PublishingHouses = await Http.GetFromJsonAsync<List<PublishingHouseModel>>("api/PublishingHouse/GetEntities");
+        Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
+        Books = await Http.GetFromJsonAsync<List<BookModel>>("api/Book/GetEntities");
+    }
+}

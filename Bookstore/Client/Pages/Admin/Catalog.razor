@@ -30,28 +30,7 @@
     protected override async Task OnInitializedAsync()
     {
         Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
-        SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
-
-    }
-
-    private void SetTreeItems(List<CatalogModel> catalogs, HashSet<TreeItemData> treeItems)
-    {
-        foreach (var catalog in catalogs.Where(t => t.Catalogs?.Select(x => x.CatalogModelId).Contains(t.Id) ?? true))
-        {
-            if (catalog.Catalogs == null)
-            {
-                treeItems.Add(new TreeItemData(catalog.Id, catalog.Title));
-            }
-            else
-            {
-                var item = new TreeItemData(catalog.Id, catalog.Title)
-                    {
-                        TreeItems = new HashSet<TreeItemData>()
-                    };
-                treeItems.Add(item);
-                SetTreeItems(catalog.Catalogs, item.TreeItems);
-            }
-        }
+        TreeItemData.SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
     }
 
     private void SetCategoryId(TreeItemData item)
