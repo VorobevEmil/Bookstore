@@ -1,4 +1,49 @@
 ﻿@page "/"
-@inject HttpClient client
 
-<PageTitle>Интернет магазин</PageTitle>
+<PageTitle>Главная страница</PageTitle>
+
+@if (Books != null)
+{
+    <MudGrid>
+
+        @foreach (var book in Books)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <div style="width:250px;">
+                    <div style="width: 100%;height: auto;">
+                        <div class="product-card__image-holder">
+                            <div class="product-card__image-link smartLink">
+                                <MudImage Src="@($"images/Book/{book.Filename}")" Alt="@book.Filename" Fluid="true" Elevation="25" Class="rounded-lg ma-4" />
+                            </div>
+                        </div>
+                        <div class="product-card__content">
+                            <div class="product-card-price">
+                                <MudText Style="font-weight:700;">@book.Price р.</MudText>
+                            </div>
+                            <div class="product-card__name smartLink">
+                                <MudText>@book.Title</MudText>
+                            </div>
+                            <MudButton FullWidth="false" Variant="Variant.Filled" Color="Color.Secondary">В корзину</MudButton>
+                        </div>
+                    </div>
+                </div>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    public List<BookModel>? Books { get; set; }
+    [Inject]
+    public IHttpClientFactory? HttpClientFactory { get; set; }
+
+    private HttpClient? _http;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+
+        Books = await _http.GetFromJsonAsync<List<BookModel>>("api/Book/GetEntities");
+
+    }
+}

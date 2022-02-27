@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -19,27 +18,27 @@ namespace Bookstore.Server.Migrations
                 oldType: "TEXT",
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<byte[]>(
-                name: "ImageData",
+            migrationBuilder.AddColumn<string>(
+                name: "Filename",
                 table: "Books",
-                type: "BLOB",
+                type: "TEXT",
                 nullable: true);
 
-            migrationBuilder.AddColumn<byte[]>(
-                name: "ImageData",
+            migrationBuilder.AddColumn<string>(
+                name: "Filename",
                 table: "Authors",
-                type: "BLOB",
+                type: "TEXT",
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ImageData",
+                name: "Filename",
                 table: "Books");
 
             migrationBuilder.DropColumn(
-                name: "ImageData",
+                name: "Filename",
                 table: "Authors");
 
             migrationBuilder.AlterColumn<string>(

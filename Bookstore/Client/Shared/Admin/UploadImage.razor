@@ -1,0 +1,98 @@
+﻿@using Bookstore.Shared
+@using Bookstore.Shared.Model
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+
+@if (SelectedValue != null)
+{
+    <MudImage Src="@_url" Alt="@SelectedValue" Fluid="true" Width="140" Elevation="25" Class="rounded-lg ma-4" />
+}
+
+<InputFile id="fileInput" accept="image/*" OnChange="UploadFile" hidden />
+<MudButton HtmlTag="label"
+           Variant="Variant.Filled"
+           Color="Color.Primary"
+           StartIcon="@Icons.Filled.CloudUpload"
+           Class="mt-5"
+           for="fileInput">
+    Загрузить фото
+</MudButton>
+
+@code {
+
+    [Parameter]
+    public string? ControllerName { get; set; }
+    private string? _value;
+    [Parameter]
+    public string? SelectedValue
+    {
+        get => _value;
+        set
+        {
+            if (_value == value) return;
+            _value = value;
+            SelectedValueChanged.InvokeAsync(value);
+        }
+    }
+
+    [Parameter]
+    public EventCallback<string> SelectedValueChanged { get; set; }
+
+    private string? _url;
+
+    protected override void OnInitialized()
+    {
+        if (SelectedValue != null)
+            _url = NavigationManager.BaseUri + $"images/{ControllerName}/" + SelectedValue;
+    }
+
+
+    private async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        try
+        {
+
+            if (e.File.ContentType.Split('/')[0] == "image")
+            {
+                var buffers = new byte[e.File.Size];
+
+                int maxAllowedSize = 1024 * 1024 * 4;
+                await e.File.OpenReadStream(maxAllowedSize).ReadAsync(buffers);
+
+
+                FileData fileData = new FileData()
+                    {
+                        Data = buffers,
+                        FileName = Guid.NewGuid().ToString() + '.' + e.File.Name.Split('.')[^1],
+                        ContentType = e.File.ContentType
+                    };
+
+                var response = await Http.PostAsJsonAsync($"api/{ControllerName}/UploadFile", fileData);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Warning);
+                }
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    _url = NavigationManager.BaseUri + $"images/{ControllerName}/" + fileData.FileName;
+                    SelectedValue = fileData.FileName;
+                }
+            }
+            else
+                Snackbar.Add(e.File.Name + " не верный формат", Severity.Warning);
+
+
+        }
+        catch (IOException)
+        {
+            Snackbar.Add("Превышен максимальный размер файла", Severity.Warning);
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Не удалось загрузить файл", Severity.Warning);
+        }
+    }
+}

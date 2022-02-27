@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Bookstore.Shared.DbModels.DbInterfaces;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bookstore.Shared.DbModels
 {
-    public class BookModel : BaseEntity
+    public class BookModel : BaseEntity, IFileManagement
     {
         [Required(ErrorMessage = "Название книги обязательно для ввода")]
         public override string? Title {get; set;}
@@ -29,7 +25,7 @@ namespace Bookstore.Shared.DbModels
         public int? YearPublication { get; set; }
         [Required(ErrorMessage = "Введите цену")]
         public int? Price { get; set; }
-
-        public byte[]? ImageData { get; set; }
+        [Required(ErrorMessage = "Загрузите обложку книги")]
+        public string? Filename { get; set; }
     }
 }

@@ -1,0 +1,40 @@
+﻿@using Bookstore.Client.UIHelper
+@inject HttpClient Http
+
+@if (Catalogs != null)
+{
+    <MudText Class="mt-3">@Title</MudText>
+    <MudTreeView Width="300px" T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetValueCallback" Dense="Dense" ExpandOnClick="ExpandOnClick">
+        <ItemTemplate>
+            <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
+        </ItemTemplate>
+    </MudTreeView>
+}
+
+@code {
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public EventCallback<TreeItemData> SetValueCallback { get; set; }
+
+    [Parameter]
+    public HttpClient? CustomHttpClient { get; set; }
+
+    [Parameter]
+    public bool Dense { get; set; }
+    [Parameter]
+    public bool ExpandOnClick { get; set; }
+
+    private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
+    public List<CatalogModel>? Catalogs { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        if (CustomHttpClient != null)
+            Catalogs = await CustomHttpClient.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
+        else
+            Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
+
+        TreeItemData.SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
+    }
+}

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220224173601_V1")]
+    [Migration("20220225172948_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,8 +92,8 @@ namespace Bookstore.Server.Migrations
                     b.Property<string>("AboutAuthor")
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("BLOB");
+                    b.Property<string>("Filename")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -125,8 +125,8 @@ namespace Bookstore.Server.Migrations
                         .IsRequired()
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("BLOB");
+                    b.Property<string>("Filename")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("NumberPages")
                         .IsRequired()

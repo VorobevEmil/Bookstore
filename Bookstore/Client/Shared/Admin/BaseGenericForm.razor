@@ -9,7 +9,7 @@
         <DataAnnotationsValidator />
         <MudText Class="mt-16" Typo="Typo.h4">@(Id == default ? "Добавить" : "Редактировать") @Title</MudText>
         <MudGrid>
-            <MudItem xs="12" sm="7">
+            <MudItem xs="12" sm="@(ShowBlockError ? 7 : 9)">
                 <MudCard>
                     <MudCardContent>
                         @ChildContent(Entity)
@@ -18,7 +18,7 @@
                         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Сохранить</MudButton>
                         @if (Id != default)
                         {
-                            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-auto" OnClick="DeleteEntity">Удалить</MudButton>
+                            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-2" OnClick="DeleteEntity">Удалить</MudButton>
                         }
                     </MudCardActions>
                 </MudCard>

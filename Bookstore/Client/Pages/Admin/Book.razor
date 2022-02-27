@@ -3,14 +3,17 @@
 @inject HttpClient Http
 @using Client.UIHelper
 
-@if (Authors != null && PublishingHouses != null && Catalogs != null)
+@if (Authors != null && PublishingHouses != null)
 {
-    <BaseGenericForm TEntity="BookModel" Title="Книгу" ControllerName="Book" Id="Id" Context="model" ShowBlockError="true" @ref="BookForm">
+    <BaseGenericForm TEntity="BookModel" Title="Книгу" ControllerName="Book" Id="Id" Context="model" ShowBlockError="true" @ref="bookForm">
         <MudTextField Label="Название книги" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
 
-        <MudTextField Label="Описание" Class="mt-3" @bind-Value="model.AboutProduct" For="@(() => model.AboutProduct)" />
+        <UploadImage ControllerName="Book" @bind-SelectedValue="bookForm.Entity.Filename" />
 
-        <MudTextField Label="Аннотация" Class="mt-3" @bind-Value="model.Annotation" For="@(() => model.Annotation)" />
+
+        <MudTextField Label="Описание" Class="mt-3" @bind-Value="model.AboutProduct" For="@(() => model.AboutProduct)" Lines="10" />
+
+        <MudTextField Label="Аннотация" Class="mt-3" @bind-Value="model.Annotation" For="@(() => model.Annotation)" Lines="10" />
 
         <MudSelect T="int?" Placeholder="Выберите автора" Class="mt-3" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.AuthorId" For="@(() => model.AuthorId)">
             @foreach (var author in Authors)
@@ -26,12 +29,7 @@
             }
         </MudSelect>
 
-        <MudText Class="mt-3">Выберите категорию</MudText>
-        <MudTreeView T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetCategoryId">
-            <ItemTemplate>
-                <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
-            </ItemTemplate>
-        </MudTreeView>
+        <CatalogTreeView Title="Выберите категорию" SetValueCallback="SetCategoryId"/>
 
         <MudTextField Label="Количество страниц" Class="mt-3" Variant="Variant.Text" Adornment="Adornment.Start" @bind-Value="model.NumberPages" For="@(() => model.NumberPages)" />
 
@@ -48,25 +46,17 @@
 
     public List<AuthorModel>? Authors { get; set; }
     public List<PublishingHouseModel>? PublishingHouses { get; set; }
-    public List<CatalogModel>? Catalogs { get; set; }
 
-    private BaseGenericForm<BookModel> BookForm;
+    private BaseGenericForm<BookModel>? bookForm;
 
     protected override async Task OnInitializedAsync()
     {
         Authors = await Http.GetFromJsonAsync<List<AuthorModel>>("api/Author/GetEntities");
         PublishingHouses = await Http.GetFromJsonAsync<List<PublishingHouseModel>>("api/PublishingHouse/GetEntities");
-        Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
-
-        TreeItemData.SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
-
     }
-
-    private TreeItemData? ActivatedValue { get; set; }
-    private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
 
     private void SetCategoryId(TreeItemData item)
     {
-        BookForm.Entity.CatalogId = item?.Id ?? null;
+        bookForm.Entity.CatalogId = item != null && item.TreeItems == null ? item.Id : null;
     }
 }

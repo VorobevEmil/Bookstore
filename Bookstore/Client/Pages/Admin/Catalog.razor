@@ -3,35 +3,20 @@
 @inject HttpClient Http
 @using Client.UIHelper
 
-@if (Catalogs != null)
-{
-    <BaseGenericForm TEntity="CatalogModel" Title="Категорию" ControllerName="Catalog" Id="Id" Context="model" @ref="catalogForm">
-        <MudTextField Label="Название категории" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
 
-        <MudDivider Class="mt-10" />
-        <MudText>Выберите подраздел создаваемой категории</MudText>
-        <MudTreeView T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetCategoryId">
-            <ItemTemplate>
-                <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
-            </ItemTemplate>
-        </MudTreeView>
+<BaseGenericForm TEntity="CatalogModel" Title="Категорию" ControllerName="Catalog" Id="Id" Context="model" @ref="catalogForm">
+    <MudTextField Label="Название категории" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
 
-    </BaseGenericForm>
-}
+    <MudDivider Class="mt-10" />
+
+    <CatalogTreeView Title="Выберите подраздел создаваемой категории" SetValueCallback="SetCategoryId" />
+
+</BaseGenericForm>
 @code {
     [Parameter]
     public int Id { get; set; }
 
     private BaseGenericForm<CatalogModel> catalogForm;
-
-    private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
-
-    public List<CatalogModel>? Catalogs { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-        Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
-        TreeItemData.SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
-    }
 
     private void SetCategoryId(TreeItemData item)
     {

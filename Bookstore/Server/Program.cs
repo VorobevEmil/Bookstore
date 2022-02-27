@@ -2,11 +2,8 @@ using Bookstore.Server.Data;
 using Bookstore.Server.Data.Service;
 using Bookstore.Server.Models;
 using Bookstore.Shared.DbModels;
-using Duende.IdentityServer.Services;
-using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -34,6 +31,8 @@ builder.Services.AddTransient<BookstoreService<PublishingHouseModel>>();
 builder.Services.AddTransient<BookstoreService<AuthorModel>>();
 builder.Services.AddTransient<BookstoreService<CatalogModel>>();
 builder.Services.AddTransient<BookstoreService<BookModel>>();
+builder.Services.AddTransient<FileManagementService<AuthorModel>>();
+builder.Services.AddTransient<FileManagementService<BookModel>>();
 
 
 

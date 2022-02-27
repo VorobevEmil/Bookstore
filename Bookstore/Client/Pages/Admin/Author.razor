@@ -1,19 +1,12 @@
 ﻿@page "/admin/author/{id:int?}"
 @attribute [Authorize(Roles = "Admin")]
-@inject HttpClient Http
+
 
 <BaseGenericForm TEntity="AuthorModel" Title="Автора" ControllerName="Author" Id="Id" Context="model" @ref="authorForm">
     <MudTextField Label="Полное имя" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
-    <InputFile id="fileInput" OnChange="UploadFile" hidden />
 
-    <MudButton HtmlTag="label"
-               Variant="Variant.Filled"
-               Color="Color.Primary"
-               StartIcon="@Icons.Filled.CloudUpload"
-               Class="mt-5"
-               for="fileInput">
-        Загрузить фото
-    </MudButton>
+    <UploadImage ControllerName="Author" @bind-SelectedValue="authorForm.Entity.Filename"/>
+    
     <MudTextField Label="Об авторе" Class="mt-3" @bind-Value="model.AboutAuthor" For="@(() => model.AboutAuthor)" Lines="5" />
 
 </BaseGenericForm>
@@ -23,12 +16,4 @@
     public int Id { get; set; }
 
     private BaseGenericForm<AuthorModel>? authorForm;
-
-    private async Task UploadFile(InputFileChangeEventArgs e)
-    {
-        var buffers = new byte[e.File.Size];
-
-        await e.File.OpenReadStream().ReadAsync(buffers);
-       
-    }
 }

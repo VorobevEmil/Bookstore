@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using Bookstore.Client.UIHelper
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -15,13 +17,41 @@
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large">
-            @Body
-        </MudContainer>
+        <MudGrid>
+
+            @if (NavigationManager.Uri.Replace("https://", "").Split('/')[1] == string.Empty)
+            {
+                <MudItem lg="2" md="12">
+                    <div class="ml-5" style="width:300px;">
+                        <CatalogTreeView Title="Категории" SetValueCallback="SetValue" CustomHttpClient="_http" Dense="true" ExpandOnClick="true" />
+                    </div>
+                </MudItem>
+            }
+            <MudItem lg="10" md="12">
+                <MudContainer MaxWidth="MaxWidth.Large">
+                    @Body
+                </MudContainer>
+            </MudItem>
+        </MudGrid>
     </MudMainContent>
 </MudLayout>
 @code {
     bool _drawerOpen = false;
+
+    [Inject]
+    public IHttpClientFactory? HttpClientFactory { get; set; }
+
+    private HttpClient? _http;
+
+    protected override void OnInitialized()
+    {
+        _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+    }
+
+    private void SetValue(TreeItemData treeItemData)
+    {
+
+    }
 
     void DrawerToggle()
     {

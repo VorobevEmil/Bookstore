@@ -90,8 +90,8 @@ namespace Bookstore.Server.Migrations
                     b.Property<string>("AboutAuthor")
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("BLOB");
+                    b.Property<string>("Filename")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -123,8 +123,8 @@ namespace Bookstore.Server.Migrations
                         .IsRequired()
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("BLOB");
+                    b.Property<string>("Filename")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("NumberPages")
                         .IsRequired()

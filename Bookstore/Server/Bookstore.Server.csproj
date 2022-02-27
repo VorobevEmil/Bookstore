@@ -38,5 +38,11 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\Author\" />
+    <Folder Include="wwwroot\images\Book\" />
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 
 </Project>
