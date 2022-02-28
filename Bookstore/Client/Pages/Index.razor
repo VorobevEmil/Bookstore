@@ -6,7 +6,7 @@
 {
     <MudGrid>
 
-        @foreach (var book in Books)
+        @foreach (var book in (SelectedCatalogId == null ? Books : Books.Where(t => t.CatalogId == SelectedCatalogs.First().Id)))
         {
             <MudItem xs="12" sm="6" md="4" lg="3">
                 <div style="width:250px;">
@@ -34,8 +34,23 @@
 
 @code {
     public List<BookModel>? Books { get; set; }
+    public List<CatalogModel>? Catalogs { get; set; }
+    public List<CatalogModel>? SelectedCatalogs { get; set; }
     [Inject]
     public IHttpClientFactory? HttpClientFactory { get; set; }
+
+
+    private int? selectedCatalogId;
+    [CascadingParameter]
+    public int? SelectedCatalogId
+    {
+        get => selectedCatalogId;
+        set
+        {
+            selectedCatalogId = value;
+            SelectedCatalogs = SelectedCatalogId != null ? Catalogs.Where(t => t.Id == (int)SelectedCatalogId).ToList() : Catalogs; 
+        }
+    }
 
     private HttpClient? _http;
 
@@ -43,7 +58,8 @@
     {
         _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
 
+        Catalogs = await _http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
+        SelectedCatalogs = Catalogs;
         Books = await _http.GetFromJsonAsync<List<BookModel>>("api/Book/GetEntities");
-
     }
 }

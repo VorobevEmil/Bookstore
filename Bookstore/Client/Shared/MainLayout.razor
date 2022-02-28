@@ -29,7 +29,9 @@
             }
             <MudItem lg="10" md="12">
                 <MudContainer MaxWidth="MaxWidth.Large">
-                    @Body
+                    <CascadingValue Value="selectedCatalogId">
+                        @Body
+                    </CascadingValue>
                 </MudContainer>
             </MudItem>
         </MudGrid>
@@ -37,6 +39,8 @@
 </MudLayout>
 @code {
     bool _drawerOpen = false;
+
+    private int? selectedCatalogId;
 
     [Inject]
     public IHttpClientFactory? HttpClientFactory { get; set; }
@@ -50,7 +54,7 @@
 
     private void SetValue(TreeItemData treeItemData)
     {
-
+        selectedCatalogId = treeItemData?.Id ?? null;
     }
 
     void DrawerToggle()
