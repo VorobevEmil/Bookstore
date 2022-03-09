@@ -17,45 +17,13 @@
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        <MudGrid>
-
-            @if (NavigationManager.Uri.Replace("https://", "").Split('/')[1] == string.Empty)
-            {
-                <MudItem lg="2" md="12">
-                    <div class="ml-5" style="width:300px;">
-                        <CatalogTreeView Title="Категории" SetValueCallback="SetValue" CustomHttpClient="_http" Dense="true" ExpandOnClick="true" />
-                    </div>
-                </MudItem>
-            }
-            <MudItem lg="10" md="12">
-                <MudContainer MaxWidth="MaxWidth.Large">
-                    <CascadingValue Value="selectedCatalogId">
-                        @Body
-                    </CascadingValue>
-                </MudContainer>
-            </MudItem>
-        </MudGrid>
+        <MudContainer MaxWidth="MaxWidth.Large">
+            @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 @code {
     bool _drawerOpen = false;
-
-    private int? selectedCatalogId;
-
-    [Inject]
-    public IHttpClientFactory? HttpClientFactory { get; set; }
-
-    private HttpClient? _http;
-
-    protected override void OnInitialized()
-    {
-        _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
-    }
-
-    private void SetValue(TreeItemData treeItemData)
-    {
-        selectedCatalogId = treeItemData?.Id ?? null;
-    }
 
     void DrawerToggle()
     {

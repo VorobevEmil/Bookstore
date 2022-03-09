@@ -27,14 +27,9 @@ JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
-builder.Services.AddTransient<BookstoreService<PublishingHouseModel>>();
-builder.Services.AddTransient<BookstoreService<AuthorModel>>();
-builder.Services.AddTransient<BookstoreService<CatalogModel>>();
-builder.Services.AddTransient<BookstoreService<BookModel>>();
-builder.Services.AddTransient<FileManagementService<AuthorModel>>();
-builder.Services.AddTransient<FileManagementService<BookModel>>();
-
-
+builder.Services.AddBookstoreService();
+builder.Services.AddFileManagementService();
+builder.Services.AddCustomModelService();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

@@ -1,0 +1,104 @@
+﻿@page "/catalog/book/{id:int}"
+@inject IHttpClientFactory HttpClientFactory
+
+@if (BookModel != null)
+{
+    <div style="padding-top:30px;">
+        <MudGrid>
+            <MudItem lg="3">
+                <MudImage Style="max-width: 100%;max-height: 100%;" Src="@($"/images/book/{BookModel.Filename}")" />
+            </MudItem>
+            <MudItem lg="9">
+                <MudText Style="font-size: 24px; font-weight:800;">@BookModel.Title</MudText>
+                <MudLink Style="font-size:16px; line-height: 24px;">@BookModel.Author.Title</MudLink>
+
+                <MudDivider Style="margin-top:70px;" />
+
+                <MudGrid>
+                    <MudItem lg="6">
+                        <div class="row">
+                            <div class="col-4">
+                                <MudText Style="font-size:16px; color: #7d8290;">ID товара</MudText>
+                            </div>
+                            <div class="col-8">
+                                <MudText Style="font-size:16px;">@BookModel.Id</MudText>
+                            </div>
+                            <div class="col-4">
+                                <MudText Style="font-size:16px; color: #7d8290;">Автор</MudText>
+                            </div>
+                            <div class="col-8">
+                                <MudText Style="font-size:16px;">@BookModel.Author.Title</MudText>
+                            </div>
+                            <div class="col-4">
+                                <MudText Style="font-size:16px; color: #7d8290;">Издательство</MudText>
+                            </div>
+                            <div class="col-8">
+                                <MudText Style="font-size:16px;">@BookModel.PublishingHouse.Title</MudText>
+                            </div>
+                            <div class="col-4">
+                                <MudText Style="font-size:16px; color: #7d8290;">Год издания</MudText>
+                            </div>
+                            <div class="col-8">
+                                <MudText Style="font-size:16px;">@BookModel.YearPublication</MudText>
+                            </div>
+                            <div class="col-4">
+                                <MudText Style="font-size:16px; color: #7d8290;">Кол-во страниц</MudText>
+                            </div>
+                            <div class="col-8">
+                                <MudText Style="font-size:16px;">@BookModel.NumberPages</MudText>
+                            </div>
+                        </div>
+                    </MudItem>
+                    <MudItem lg="6">
+                        <div style="padding:38px;">
+
+                            <MudPaper Square="true" Style="background-color:rgba(38, 169, 224, 0.1);">
+                                <div style="padding:38px;">
+                                    <MudText Style="font-size:14px; color:#6ebc63;">&#10004; В наличии</MudText>
+                                    <MudText Style="font-size:24px; font-weight:800">@BookModel.Price &#8381;</MudText>
+                                    <div class="pt-2 pr-3" style="margin-top:20px;">
+                                        <MudButton Variant="Variant.Filled" Color="Color.Info" FullWidth="true">В корзину</MudButton>
+                                    </div>
+                                </div>
+                            </MudPaper>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+
+            </MudItem>
+        </MudGrid>
+    </div>
+
+    <div class="row" style="padding-top:20px;">
+        <div class="col-6">
+            <MudText Style="font-size: 24px; font-weight:900;">О товаре</MudText>
+            <MudText Style="font-size: 16px;">@BookModel.AboutProduct</MudText>
+        </div>
+    </div>
+
+    @if (BookModel.Annotation != null)
+    {
+        <div class="row" style="padding-top:20px;">
+            <div class="col-6">
+                <MudText Style="font-size: 24px; font-weight:900;">Аннотация</MudText>
+                <MudText Style="font-size: 16px;">@BookModel.Annotation</MudText>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+
+    public BookModel? BookModel { get; set; }
+    private HttpClient _http;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+        BookModel = await _http.GetFromJsonAsync<BookModel>($"api/Book/GetBookId/{Id}");
+    }
+
+}

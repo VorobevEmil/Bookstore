@@ -1,5 +1,4 @@
 ﻿@using Bookstore.Client.UIHelper
-@inject HttpClient Http
 
 @if (Catalogs != null)
 {
@@ -18,8 +17,6 @@
     [Parameter]
     public EventCallback<TreeItemData> SetValueCallback { get; set; }
 
-    [Parameter]
-    public HttpClient? CustomHttpClient { get; set; }
 
     [Parameter]
     public bool Dense { get; set; }
@@ -28,12 +25,15 @@
 
     private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
     public List<CatalogModel>? Catalogs { get; set; }
+
+    [Inject]
+    public IHttpClientFactory? HttpClientFactory { get; set; }
+    private HttpClient? _http;
     protected override async Task OnInitializedAsync()
     {
-        if (CustomHttpClient != null)
-            Catalogs = await CustomHttpClient.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
-        else
-            Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
+        _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+
+        Catalogs = await _http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
 
         TreeItemData.SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
     }
