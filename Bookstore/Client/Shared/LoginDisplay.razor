@@ -5,11 +5,16 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudLink Color="Color.Dark" Href="authentication/profile">Здравствуйте, @context.User.Identity.Name!</MudLink>
-        <MudButton OnClick="BeginSignOut">Выйти</MudButton>
+        <MudLink Color="Color.Default" Class="text-white mr-2"><MudIcon Icon="@Icons.Filled.ShoppingCart"/></MudLink>
+        <MudLink Color="Color.Default" Class="text-white" Href="authentication/profile">Здравствуйте, @context.User.Identity.Name!</MudLink>
+        <MudButton OnClick="BeginSignOut" Color="Color.Default" Class="text-white">Выйти</MudButton>
     </Authorized>
     <NotAuthorized>
-        <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+        <MudBreadcrumbs Items="_items">
+            <ItemTemplate Context="item">
+                <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon" /> @item.Text</MudLink>
+            </ItemTemplate>
+        </MudBreadcrumbs>
     </NotAuthorized>
 </AuthorizeView>
 

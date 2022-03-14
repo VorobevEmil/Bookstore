@@ -2,18 +2,23 @@
 @using Bookstore.Client.UIHelper
 @inject IHttpClientFactory HttpClientFactory
 
+
 @if (SelectedBooks != null)
 {
-    <div style="padding-top:20px;">
+    <div class="pt-2">
         <div class="catalog">
             <CatalogTreeView Title="Каталог" Dense="true" ExpandOnClick="true" SetValueCallback="FilterBooksByCategory" />
         </div>
-        <div>
+        <div class="pt-5">
+            @if(categoryTitle != null)
+            {
+            <MudText Style="font-size:36px;font-weight:600;" Class="pt-2">@categoryTitle</MudText>
+            }
             <MudGrid>
                 @foreach (var book in SelectedBooks)
                 {
                     <MudItem lg="3" sm="6" xs="12">
-                        <MudPaper Elevation="2" Class="pa-4" Width="100%">
+                        <MudPaper Elevation="2" Class="pa-4" Width="100%" Height="100%">
                             <MudImage Class="rounded mx-auto d-block" Src="@($"/images/book/{book.Filename}")" Height="300" Width="192" />
                             <div class="p-3">
                                 <MudText Style="font-weight: bold;">@book.Price р.</MudText>
@@ -36,10 +41,9 @@
     public List<CatalogModel>? Catalogs { get; set; }
     private HttpClient _http;
 
+
     protected override async Task OnInitializedAsync()
     {
-        ChildCatalogId = new List<int>();
-
         _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
         Catalogs = await _http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
         Books = await _http.GetFromJsonAsync<List<BookModel>>("api/Book/GetBooks");
@@ -47,14 +51,15 @@
     }
 
 
+    private string categoryTitle;
     private void FilterBooksByCategory(TreeItemData treeItemData)
     {
+        categoryTitle = treeItemData?.Title ?? null;
         if (treeItemData != null)
         {
-            ChildCatalogId.Clear();
+            childCatalogId.Clear();
             AddChildCatalog(treeItemData);
-            SelectedBooks = Books.Where(t => t.CatalogId == treeItemData.Id || ChildCatalogId.Contains((int)t.CatalogId)).ToList();
-            //SelectedBooks = Books.Where(t => t.CatalogId == treeItemData.Id).ToList();
+            SelectedBooks = Books.Where(t => t.CatalogId == treeItemData.Id || childCatalogId.Contains((int)t.CatalogId)).ToList();
         }
         else
         {
@@ -62,7 +67,7 @@
         }
     }
 
-    public List<int> ChildCatalogId { get; set; }
+    private List<int> childCatalogId = new List<int>();
     private void AddChildCatalog(TreeItemData treeItemData)
     {
         if (treeItemData.TreeItems == null)
@@ -70,7 +75,7 @@
 
         foreach (var item in treeItemData.TreeItems)
         {
-            ChildCatalogId.Add(item.Id);
+            childCatalogId.Add(item.Id);
             AddChildCatalog(item);
 
         }

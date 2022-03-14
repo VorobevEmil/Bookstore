@@ -30,6 +30,12 @@
                                 <MudText Style="font-size:16px;">@BookModel.Author.Title</MudText>
                             </div>
                             <div class="col-4">
+                                <MudText Style="font-size:16px; color: #7d8290;">Раздел</MudText>
+                            </div>
+                            <div class="col-8">
+                                <MudText Style="font-size:16px;">@BookModel.Catalog.Title</MudText>
+                            </div>
+                            <div class="col-4">
                                 <MudText Style="font-size:16px; color: #7d8290;">Издательство</MudText>
                             </div>
                             <div class="col-8">
@@ -57,7 +63,7 @@
                                     <MudText Style="font-size:14px; color:#6ebc63;">&#10004; В наличии</MudText>
                                     <MudText Style="font-size:24px; font-weight:800">@BookModel.Price &#8381;</MudText>
                                     <div class="pt-2 pr-3" style="margin-top:20px;">
-                                        <MudButton Variant="Variant.Filled" Color="Color.Info" FullWidth="true">В корзину</MudButton>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Info" FullWidth="true"><MudIcon Icon="@Icons.Filled.ShoppingCart"/> В корзину</MudButton>
                                     </div>
                                 </div>
                             </MudPaper>

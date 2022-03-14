@@ -1,8 +1,17 @@
-﻿<MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Главная</MudNavLink>
-    <AuthorizeView Roles="Admin">
-        <Authorized>
-            <MudNavLink Href="/Admin" Match="NavLinkMatch.Prefix">Панель администратора</MudNavLink>
-        </Authorized>
-    </AuthorizeView>
-</MudNavMenu>
+﻿
+<MudBreadcrumbs Items="_items">
+    <SeparatorTemplate>
+        <MudText Color="Color.Default" Style="text-white">/</MudText>
+    </SeparatorTemplate>
+    <ItemTemplate Context="item">
+        <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon"/> @item.Text</MudLink>
+    </ItemTemplate>
+</MudBreadcrumbs>
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Каталог", href: "/", icon: Icons.Filled.Menu),
+        new BreadcrumbItem("Панель администратора", href: "/admin", icon: Icons.Filled.Security)
+    };
+}
