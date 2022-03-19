@@ -7,19 +7,21 @@
 {
     <div class="pt-2">
         <div class="catalog">
-            <CatalogTreeView Title="Каталог" Dense="true" ExpandOnClick="true" SetValueCallback="FilterBooksByCategory" />
+            <CatalogTreeView Title="Каталог" Dense="true" SetValueCallback="FilterBooksByCategory" />
         </div>
         <div class="pt-5">
-            @if(categoryTitle != null)
+            @if (categoryTitle != null)
             {
-            <MudText Style="font-size:36px;font-weight:600;" Class="pt-2">@categoryTitle</MudText>
+                <MudText Style="font-size:36px;font-weight:600;" Class="pt-2">@categoryTitle</MudText>
             }
             <MudGrid>
                 @foreach (var book in SelectedBooks)
                 {
                     <MudItem lg="3" sm="6" xs="12">
                         <MudPaper Elevation="2" Class="pa-4" Width="100%" Height="100%">
-                            <MudImage Class="rounded mx-auto d-block" Src="@($"/images/book/{book.Filename}")" Height="300" Width="192" />
+                            <MudLink Href="@($"catalog/book/{book.Id}")">
+                                <MudImage Class="rounded mx-auto d-block" Src="@($"/images/book/{book.Filename}")" Height="300" Width="192" />
+                            </MudLink>
                             <div class="p-3">
                                 <MudText Style="font-weight: bold;">@book.Price р.</MudText>
                                 <MudLink Href="@($"catalog/book/{book.Id}")">@book.Title</MudLink>

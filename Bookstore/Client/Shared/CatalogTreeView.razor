@@ -3,7 +3,7 @@
 @if (Catalogs != null)
 {
     <MudText Class="mt-3">@Title</MudText>
-    <MudTreeView Width="300px" T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetValueCallback" Dense="Dense" ExpandOnClick="ExpandOnClick">
+    <MudTreeView Width="300px" T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetValueCallback" Dense="Dense">
         <ItemTemplate>
             <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
         </ItemTemplate>
@@ -20,8 +20,6 @@
 
     [Parameter]
     public bool Dense { get; set; }
-    [Parameter]
-    public bool ExpandOnClick { get; set; }
 
     private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
     public List<CatalogModel>? Catalogs { get; set; }

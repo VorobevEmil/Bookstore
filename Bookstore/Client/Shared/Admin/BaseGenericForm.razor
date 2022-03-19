@@ -74,9 +74,18 @@
         NavigationManager.NavigateTo("/");
     }
 
+    [Inject] private IDialogService DialogService { get; set; }
+
     private async Task DeleteEntity()
     {
-        await Http.PostAsJsonAsync($"api/{ControllerName}/Delete", Entity);
-        NavigationManager.NavigateTo("/");
+        bool? result = await DialogService.ShowMessageBox(
+            "Удалить",
+            "Вы действительно хотите удалить эту запись? Этот процесс нельзя будет остановить",
+            yesText: "Удалить", cancelText: "Отмена");
+        if (result == true)
+        {
+            await Http.PostAsJsonAsync($"api/{ControllerName}/Delete", Entity);
+            NavigationManager.NavigateTo("/");
+        }
     }
 }

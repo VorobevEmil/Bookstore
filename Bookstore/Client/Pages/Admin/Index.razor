@@ -28,7 +28,7 @@
         <ChildRowTemplate Context="model">
             <MudTd DataLabel="Id">@model.Id</MudTd>
             <MudTd DataLabel="Название издательства">@model.Title</MudTd>
-            <MudTd><MudLink Href="@($"/Admin/PublishingHouse/{model.Id}")">Ред.</MudLink></MudTd>
+            <MudTd><MudLink Href="@($"/Admin/publishing-house/{model.Id}")">Ред.</MudLink></MudTd>
         </ChildRowTemplate>
     </GenericTable>
 

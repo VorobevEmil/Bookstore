@@ -1,17 +1,34 @@
-﻿
-<MudBreadcrumbs Items="_items">
+﻿<MudBreadcrumbs Items="_items">
     <SeparatorTemplate>
         <MudText Color="Color.Default" Style="text-white">/</MudText>
     </SeparatorTemplate>
     <ItemTemplate Context="item">
-        <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon"/> @item.Text</MudLink>
+        <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon" /> @item.Text</MudLink>
     </ItemTemplate>
 </MudBreadcrumbs>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <MudBreadcrumbs Items="_admin">
+            <SeparatorTemplate>
+                <MudText Color="Color.Default" Style="text-white">/</MudText>
+            </SeparatorTemplate>
+            <ItemTemplate Context="item">
+                <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon" /> @item.Text</MudLink>
+            </ItemTemplate>
+        </MudBreadcrumbs>
+    </Authorized>
+</AuthorizeView>
+
 
 @code {
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Каталог", href: "/", icon: Icons.Filled.Menu),
+    };
+
+    private List<BreadcrumbItem> _admin = new List<BreadcrumbItem>
+    {
         new BreadcrumbItem("Панель администратора", href: "/admin", icon: Icons.Filled.Security)
     };
 }
