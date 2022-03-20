@@ -1,5 +1,6 @@
 using Bookstore.Server.Data;
 using Bookstore.Server.Data.Service;
+using Bookstore.Server.Helper;
 using Bookstore.Server.Models;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authentication;
@@ -28,7 +29,6 @@ builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
 builder.Services.AddBookstoreService();
-builder.Services.AddFileManagementService();
 builder.Services.AddCustomModelService();
 
 builder.Services.AddControllersWithViews();

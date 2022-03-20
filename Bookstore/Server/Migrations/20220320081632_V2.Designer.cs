@@ -3,6 +3,7 @@ using System;
 using Bookstore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220320081632_V2")]
+    partial class V2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
@@ -93,6 +95,9 @@ namespace Bookstore.Server.Migrations
                     b.Property<string>("FileData")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Filename")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -124,6 +129,9 @@ namespace Bookstore.Server.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FileData")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Filename")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

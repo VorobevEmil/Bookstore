@@ -21,7 +21,7 @@
                     <MudItem lg="3" sm="6" xs="12">
                         <MudPaper Elevation="2" Class="pa-4" Width="100%" Height="100%">
                             <MudLink Href="@($"catalog/book/{book.Id}")">
-                                <MudImage Class="rounded mx-auto d-block" Src="@($"/images/book/{book.Filename}")" Height="300" Width="192" />
+                                <MudImage Class="rounded mx-auto d-block" Src="@($"data:image/png;base64, {book.FileData}")" Alt="@book.Title" Height="300" Width="192" />
                             </MudLink>
                             <div class="p-3">
                                 <MudText Style="font-weight: bold;">@book.Price р.</MudText>

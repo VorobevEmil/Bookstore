@@ -26,6 +26,6 @@ namespace Bookstore.Shared.DbModels
         [Required(ErrorMessage = "Введите цену")]
         public int? Price { get; set; }
         [Required(ErrorMessage = "Загрузите обложку книги")]
-        public string? Filename { get; set; }
+        public string? FileData { get; set; }
     }
 }

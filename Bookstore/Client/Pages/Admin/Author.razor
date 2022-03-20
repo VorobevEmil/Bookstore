@@ -5,7 +5,7 @@
 <BaseGenericForm TEntity="AuthorModel" Title="Автора" ControllerName="Author" Id="Id" Context="model" @ref="authorForm">
     <MudTextField Label="Полное имя" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
 
-    <UploadImage ControllerName="Author" @bind-SelectedValue="authorForm.Entity.Filename"/>
+    <UploadImage @bind-FileDataValue="authorForm.Entity.FileData" TitleImage="authorForm.Entity.Title" />
     
     <MudTextField Label="Об авторе" Class="mt-3" @bind-Value="model.AboutAuthor" For="@(() => model.AboutAuthor)" Lines="5" />
 

@@ -8,7 +8,7 @@
     <BaseGenericForm TEntity="BookModel" Title="Книгу" ControllerName="Book" Id="Id" Context="model" ShowBlockError="true" @ref="bookForm">
         <MudTextField Label="Название книги" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
 
-        <UploadImage ControllerName="Book" @bind-SelectedValue="bookForm.Entity.Filename" />
+        <UploadImage @bind-FileDataValue="bookForm.Entity.FileData" TitleImage="bookForm.Entity.Title" />
 
 
         <MudTextField Label="Описание" Class="mt-3" @bind-Value="model.AboutProduct" For="@(() => model.AboutProduct)" Lines="10" />

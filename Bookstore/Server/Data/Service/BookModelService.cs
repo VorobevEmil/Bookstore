@@ -20,7 +20,6 @@ namespace Bookstore.Server.Data.Service
                     Title = t.Title,
                     Annotation = t.Annotation,
                     AboutProduct = t.AboutProduct,
-                    Filename = t.Filename,
                     NumberPages = t.NumberPages,
                     Price = t.Price,
                     YearPublication = t.YearPublication,
@@ -29,13 +28,13 @@ namespace Bookstore.Server.Data.Service
                         Id = t.Author.Id,
                         Title = t.Author.Title,
                         AboutAuthor = t.Author.AboutAuthor,
-                        Filename = t.Author.Filename
                     },
                     AuthorId = t.AuthorId,
                     Catalog = t.Catalog,
                     CatalogId = t.CatalogId,
                     PublishingHouse = t.PublishingHouse,
                     PublishingHouseId = t.PublishingHouseId,
+                    FileData = t.FileData
                 })
                 .ToListAsync();
         }
@@ -54,7 +53,6 @@ namespace Bookstore.Server.Data.Service
                 Title = result.Title,
                 Annotation = result.Annotation,
                 AboutProduct = result.AboutProduct,
-                Filename = result.Filename,
                 NumberPages = result.NumberPages,
                 Price = result.Price,
                 YearPublication = result.YearPublication,
@@ -63,7 +61,6 @@ namespace Bookstore.Server.Data.Service
                     Id = result.Author.Id,
                     Title = result.Author.Title,
                     AboutAuthor = result.Author.AboutAuthor,
-                    Filename = result.Author.Filename
                 },
                 AuthorId = result.AuthorId,
                 Catalog = new CatalogModel()
@@ -80,6 +77,7 @@ namespace Bookstore.Server.Data.Service
                     Title = result.PublishingHouse.Title
                 },
                 PublishingHouseId = result.PublishingHouseId,
+                FileData = result.FileData
             };
         }
 

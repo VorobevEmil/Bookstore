@@ -15,6 +15,7 @@ namespace Bookstore.Shared.DbModels
         public List<BookModel>? Books { get; set; }
         public string? AboutAuthor { get; set; }
 
-        public string? Filename { get; set; }
+        public string? FileData { get; set; }
+
     }
 }

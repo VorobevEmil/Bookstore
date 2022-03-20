@@ -2,6 +2,6 @@
 {
     public interface IFileManagement
     {
-        public string? Filename { get; set; }
+        public string? FileData { get; set; }
     }
 }

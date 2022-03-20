@@ -1,12 +1,11 @@
 ﻿@using Bookstore.Shared
-@using Bookstore.Shared.Model
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 
-@if (SelectedValue != null)
+@if (FileDataValue != null)
 {
-    <MudImage Src="@_url" Alt="@SelectedValue" Fluid="true" Width="140" Elevation="25" Class="rounded-lg ma-4" />
+    <MudImage Src="@($"data:image/png;base64, {FileDataValue}")" Alt="@TitleImage" Fluid="true" Width="140" Elevation="25" Class="rounded-lg ma-4" />
 }
 
 <InputFile id="fileInput" accept="image/*" OnChange="UploadFile" hidden />
@@ -20,46 +19,29 @@
 </MudButton>
 
 @code {
+    [Parameter]
+    public string TitleImage { get; set; }
 
+    private string? _fileData;
     [Parameter]
-    public string? ControllerName { get; set; }
-    private string? _value;
-    [Parameter]
-    public string? SelectedValue
+    public string? FileDataValue
     {
-        get => _value;
+        get => _fileData;
         set
         {
-            if (_value == value) return;
-            _value = value;
-            SelectedValueChanged.InvokeAsync(value);
+            if (_fileData == value) return;
+            _fileData = value;
+            FileDataValueChanged.InvokeAsync(value);
         }
     }
 
     [Parameter]
-    public EventCallback<string> SelectedValueChanged { get; set; }
-
-    private string? _url;
-
-    protected override void OnInitialized()
-    {
-        if (SelectedValue != null)
-            _url = NavigationManager.BaseUri + $"images/{ControllerName}/" + SelectedValue;
-    }
-
-
-    private string _currentFileName;
+    public EventCallback<string?> FileDataValueChanged { get; set; }
 
     private async Task UploadFile(InputFileChangeEventArgs e)
     {
         try
         {
-            _currentFileName = SelectedValue;
-            if (!string.IsNullOrWhiteSpace(_currentFileName))
-            {
-                await Http.PostAsJsonAsync($"api/{ControllerName}/DeleteFile", _currentFileName);
-            }
-
             if (e.File.ContentType.Split('/')[0] == "image")
             {
                 var buffers = new byte[e.File.Size];
@@ -67,26 +49,7 @@
                 int maxAllowedSize = 1024 * 1024 * 4;
                 await e.File.OpenReadStream(maxAllowedSize).ReadAsync(buffers);
 
-
-                FileData fileData = new FileData()
-                    {
-                        Data = buffers,
-                        FileName = Guid.NewGuid().ToString() + '.' + e.File.Name.Split('.')[^1],
-                        ContentType = e.File.ContentType
-                    };
-
-                var response = await Http.PostAsJsonAsync($"api/{ControllerName}/UploadFile", fileData);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                {
-                    Snackbar.Add(await response.Content.ReadAsStringAsync(), Severity.Warning);
-                }
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    _url = NavigationManager.BaseUri + $"images/{ControllerName}/" + fileData.FileName;
-                    SelectedValue = fileData.FileName;
-                }
+                FileDataValue = Convert.ToBase64String(buffers);
             }
             else
                 Snackbar.Add(e.File.Name + " не верный формат", Severity.Warning);

@@ -10,7 +10,7 @@
     <div style="padding-top:30px;">
         <MudGrid>
             <MudItem lg="3">
-                <MudImage Style="max-width: 100%;max-height: 100%;" Src="@($"/images/book/{BookModel.Filename}")" />
+                <MudImage Style="max-width: 100%;max-height: 100%;" Src="@($"data:image/png;base64, {BookModel.FileData}")" Alt="@BookModel.Title" />
             </MudItem>
             <MudItem lg="9">
                 <MudText Style="font-size: 24px; font-weight:800;">@BookModel.Title</MudText>

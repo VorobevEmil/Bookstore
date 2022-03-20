@@ -1,6 +1,7 @@
-﻿using Bookstore.Shared.DbModels;
+﻿using Bookstore.Server.Data.Service;
+using Bookstore.Shared.DbModels;
 
-namespace Bookstore.Server.Data.Service
+namespace Bookstore.Server.Helper
 {
     public static class ServiceCollectionExtensions
     {
@@ -10,14 +11,6 @@ namespace Bookstore.Server.Data.Service
             services.AddTransient<BookstoreService<AuthorModel>>();
             services.AddTransient<BookstoreService<CatalogModel>>();
             services.AddTransient<BookstoreService<BookModel>>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddFileManagementService(this IServiceCollection services)
-        {
-            services.AddTransient<FileManagementService<AuthorModel>>();
-            services.AddTransient<FileManagementService<BookModel>>();
 
             return services;
         }
