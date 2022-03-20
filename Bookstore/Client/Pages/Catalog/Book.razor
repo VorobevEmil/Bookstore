@@ -1,8 +1,12 @@
 ﻿@page "/catalog/book/{id:int}"
 @inject IHttpClientFactory HttpClientFactory
 
+<PageTitle>Каталог книг в интернет магазине Книжная лавка</PageTitle>
+
 @if (BookModel != null)
 {
+    <PageTitle>@BookModel.Title • @BookModel.Author.Title - купить книгу по низкой цене</PageTitle>
+
     <div style="padding-top:30px;">
         <MudGrid>
             <MudItem lg="3">
@@ -63,7 +67,7 @@
                                     <MudText Style="font-size:14px; color:#6ebc63;">&#10004; В наличии</MudText>
                                     <MudText Style="font-size:24px; font-weight:800">@BookModel.Price &#8381;</MudText>
                                     <div class="pt-2 pr-3" style="margin-top:20px;">
-                                        <MudButton Variant="Variant.Filled" Color="Color.Info" FullWidth="true"><MudIcon Icon="@Icons.Filled.ShoppingCart"/> В корзину</MudButton>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Info" FullWidth="true"><MudIcon Icon="@Icons.Filled.ShoppingCart" /> В корзину</MudButton>
                                     </div>
                                 </div>
                             </MudPaper>

@@ -2,12 +2,13 @@
 @using Bookstore.Client.UIHelper
 @inject IHttpClientFactory HttpClientFactory
 
+<PageTitle>Каталог книг в интернет магазине Книжная лавка</PageTitle>
 
 @if (SelectedBooks != null)
 {
     <div class="pt-2">
         <div class="catalog">
-            <CatalogTreeView Title="Каталог" Dense="true" SetValueCallback="FilterBooksByCategory" />
+            <CatalogTreeView Title="Категории" Dense="true" SetValueCallback="FilterBooksByCategory" />
         </div>
         <div class="pt-5">
             @if (categoryTitle != null)

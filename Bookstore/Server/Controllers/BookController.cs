@@ -29,6 +29,13 @@ namespace Bookstore.Server.Controllers
             return Ok();
         }
 
+        [HttpPost("DeleteFile")]
+        public IActionResult DeleteFile([FromBody] string filename)
+        {
+            _fileManagementService.RemoveFile(FilePath.BOOK, filename);
+            return Ok();
+        }
+
         [AllowAnonymous]
         [HttpGet("GetBooks")]
         public async Task<List<BookModel>> GetBooks()
@@ -45,6 +52,13 @@ namespace Bookstore.Server.Controllers
                 return Ok(result);
 
             return NotFound();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetBooksByTitle/{title}")]
+        public async Task<List<BookModel>> GetBooksByTitle(string title)
+        {
+            return await _bookService.GetAllByTitle(title);
         }
     }
 }

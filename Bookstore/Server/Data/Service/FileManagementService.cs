@@ -31,5 +31,18 @@ namespace Bookstore.Server.Data.Service
 
             return errorMessage;
         }
+
+        public void RemoveFile(string folderRecord, string filename)
+        {
+            string path = FilePath.FOLDER_PATH;
+            path = path[^1] == '\\' ? path : path + '\\';
+
+            folderRecord = folderRecord[^1] == '\\' ? folderRecord : folderRecord + '\\';
+
+            if (File.Exists($"{path}{folderRecord}{filename}"))
+            {
+                File.Delete($"{path}{folderRecord}{filename}");
+            }
+        }
     }
 }

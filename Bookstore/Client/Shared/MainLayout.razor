@@ -1,6 +1,8 @@
 ﻿@using Bookstore.Client.UIHelper
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
+@inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager NavigationManager
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -9,9 +11,23 @@
 <MudLayout>
 
     <MudAppBar Elevation="1" Fixed="false">
+        <MudImage Src="logo.gif" Height="56" />
         <NavMenu />
 
         <MudSpacer />
+
+        <MudAutocomplete T="BookModel"
+                         SearchFunc="@Search"
+                         ToStringFunc="@(e => e.Title)"
+                         ValueChanged="SelectBook"
+                         Margin="Margin.Dense"
+                         Adornment="Adornment.Start"
+                         Class="mr-2"
+                         Style="width:300px; float:right;"
+                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default" Variant="Variant.Outlined" InputMode="InputMode.search">
+
+
+        </MudAutocomplete>
         <LoginDisplay />
     </MudAppBar>
 
@@ -21,3 +37,28 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
+@code {
+    private HttpClient _http;
+
+    private string _selectedText = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+    }
+
+    private async Task<IEnumerable<BookModel>> Search(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return new List<BookModel>();
+        var books = await _http.GetFromJsonAsync<List<BookModel>>($"api/Book/GetBooksByTitle/{value}");
+        return books;
+    }
+
+    private void SelectBook(BookModel bookModel)
+    {
+        NavigationManager.NavigateTo($"/catalog/book/");
+        NavigationManager.NavigateTo($"/catalog/book/{bookModel.Id}");
+    }
+}

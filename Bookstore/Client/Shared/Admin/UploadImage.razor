@@ -48,10 +48,17 @@
     }
 
 
+    private string _currentFileName;
+
     private async Task UploadFile(InputFileChangeEventArgs e)
     {
         try
         {
+            _currentFileName = SelectedValue;
+            if (!string.IsNullOrWhiteSpace(_currentFileName))
+            {
+                await Http.PostAsJsonAsync($"api/{ControllerName}/DeleteFile", _currentFileName);
+            }
 
             if (e.File.ContentType.Split('/')[0] == "image")
             {

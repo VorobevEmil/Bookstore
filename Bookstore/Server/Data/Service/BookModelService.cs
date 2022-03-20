@@ -82,5 +82,17 @@ namespace Bookstore.Server.Data.Service
                 PublishingHouseId = result.PublishingHouseId,
             };
         }
+
+        public async Task<List<BookModel>> GetAllByTitle(string title)
+        {
+            return await _context.Books
+                .Where(t => t.Title.Contains(title))
+                .Select(t => new BookModel()
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                })
+                .ToListAsync();
+        }
     }
 }

@@ -11,6 +11,9 @@
     </Authorized>
     <NotAuthorized>
         <MudBreadcrumbs Items="_items">
+            <SeparatorTemplate>
+                <MudText Color="Color.Default" Style="text-white">/</MudText>
+            </SeparatorTemplate>
             <ItemTemplate Context="item">
                 <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon" /> @item.Text</MudLink>
             </ItemTemplate>
