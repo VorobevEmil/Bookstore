@@ -14,7 +14,7 @@
             </MudItem>
             <MudItem lg="9">
                 <MudText Style="font-size: 24px; font-weight:800;">@BookModel.Title</MudText>
-                <MudLink Style="font-size:16px; line-height: 24px;">@BookModel.Author.Title</MudLink>
+                <MudLink Href="@($"/catalog/author/{BookModel.AuthorId}")" Color="Color.Default" Style="font-size:16px; line-height: 24px; color: #7d8290;">@BookModel.Author.Title</MudLink>
 
                 <MudDivider Style="margin-top:70px;" />
 

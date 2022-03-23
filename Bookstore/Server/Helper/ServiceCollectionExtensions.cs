@@ -18,6 +18,7 @@ namespace Bookstore.Server.Helper
         public static IServiceCollection AddCustomModelService(this IServiceCollection services)
         {
             services.AddTransient<BookModelService>();
+            services.AddTransient<AuthorModelService>();
 
             return services;
         }
