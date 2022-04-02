@@ -1,5 +1,4 @@
-﻿using Bookstore.Server.Models;
-using Bookstore.Shared.DbModels;
+﻿using Bookstore.Shared.DbModels;
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Identity;
@@ -18,5 +17,11 @@ namespace Bookstore.Server.Data
         public DbSet<AuthorModel>? Authors { get; set; }
         public DbSet<PublishingHouseModel>? PublishingHouses { get; set; }
         public DbSet<CatalogModel>? Catalogs { get; set; }
+        public DbSet<CartModel> Carts { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
     }
 }

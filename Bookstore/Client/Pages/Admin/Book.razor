@@ -51,8 +51,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Authors = await Http.GetFromJsonAsync<List<AuthorModel>>("api/Author/GetEntities");
-        PublishingHouses = await Http.GetFromJsonAsync<List<PublishingHouseModel>>("api/PublishingHouse/GetEntities");
+        Authors = await Http.GetFromJsonAsync<List<AuthorModel>>("api/Author/GetAll");
+        PublishingHouses = await Http.GetFromJsonAsync<List<PublishingHouseModel>>("api/PublishingHouse/GetAll");
     }
 
     private void SetCategoryId(TreeItemData item)

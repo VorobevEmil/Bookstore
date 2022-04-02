@@ -1,9 +1,8 @@
-﻿using Bookstore.Shared.DbModels.DbInterfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bookstore.Shared.DbModels
 {
-    public class BookModel : BaseEntity, IFileManagement
+    public class BookModel : BaseEntity
     {
         [Required(ErrorMessage = "Название книги обязательно для ввода")]
         public override string? Title {get; set;}
@@ -27,5 +26,6 @@ namespace Bookstore.Shared.DbModels
         public int? Price { get; set; }
         [Required(ErrorMessage = "Загрузите обложку книги")]
         public string? FileData { get; set; }
+        public List<CartModel>? Carts { get; set; }
     }
 }

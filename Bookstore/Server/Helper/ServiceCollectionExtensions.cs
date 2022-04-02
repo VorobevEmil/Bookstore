@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Data.Service;
+﻿using Bookstore.Server.Core;
 using Bookstore.Shared.DbModels;
 
 namespace Bookstore.Server.Helper
@@ -7,18 +7,11 @@ namespace Bookstore.Server.Helper
     {
         public static IServiceCollection AddBookstoreService(this IServiceCollection services)
         {
-            services.AddTransient<BookstoreService<PublishingHouseModel>>();
-            services.AddTransient<BookstoreService<AuthorModel>>();
-            services.AddTransient<BookstoreService<CatalogModel>>();
-            services.AddTransient<BookstoreService<BookModel>>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddCustomModelService(this IServiceCollection services)
-        {
-            services.AddTransient<BookModelService>();
-            services.AddTransient<AuthorModelService>();
+            services.AddTransient<AuthorCore>();
+            services.AddTransient<BookCore>();
+            services.AddTransient<CartCore>();
+            services.AddTransient<CatalogCore>();
+            services.AddTransient<PublishingHouseCore>();
 
             return services;
         }

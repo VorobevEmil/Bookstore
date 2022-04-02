@@ -56,6 +56,6 @@
     protected override async Task OnInitializedAsync()
     {
         _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
-        AuthorModel = await _http.GetFromJsonAsync<AuthorModel>($"api/Author/GetAuthorId/{Id}");
+        AuthorModel = await _http.GetFromJsonAsync<AuthorModel>($"api/Author/GetById/{Id}");
     }
 }

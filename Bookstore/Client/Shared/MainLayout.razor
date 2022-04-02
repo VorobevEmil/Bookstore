@@ -52,7 +52,7 @@
     {
         if (string.IsNullOrWhiteSpace(value))
             return new List<BookModel>();
-        var books = await _http.GetFromJsonAsync<List<BookModel>>($"api/Book/GetBooksByTitle/{value}");
+        var books = await _http.GetFromJsonAsync<List<BookModel>>($"api/Book/GetAllByTitle/{value}");
         return books;
     }
 

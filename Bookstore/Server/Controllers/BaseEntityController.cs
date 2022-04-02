@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Data.Service;
+﻿using Bookstore.Server.Core;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,41 +10,71 @@ namespace Bookstore.Server.Controllers
     [Route("api/[controller]")]
     public abstract class BaseEntityController<TEntity> : ControllerBase where TEntity : BaseEntity
     {
-        protected readonly BookstoreService<TEntity> _service;
+        private readonly BaseCore<TEntity> _core;
 
-        public BaseEntityController(BookstoreService<TEntity> service)
+        public BaseEntityController(BaseCore<TEntity> core)
         {
-            _service = service;
+            _core = core;
         }
 
         [AllowAnonymous]
-        [HttpGet("GetEntities")]
-        public async Task<IEnumerable<TEntity>> GetEntities()
+        [HttpGet("GetAll")]
+        public virtual async Task<ActionResult<IEnumerable<TEntity>>> GetAllAsync()
         {
-            return await _service.GetListEntitiesAsync();
+            try
+            {
+                return Ok(await _core.GetAllAsync());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Произошла ошибка" + ex);
+            }
         }
 
         [AllowAnonymous]
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<TEntity>> GetById(int id)
+        public virtual async Task<ActionResult<TEntity>> GetByIdAsync(int id)
         {
-            var result = await _service.GetByIdAsync(id);
-            if (result != null)
-                return Ok(result);
+            try
+            {
+                var result = await _core.GetByIdAsync(id);
+                if (result != null)
+                    return Ok(result);
 
-            return NotFound();
+                return NotFound("Не удалось найти сущность");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Произошла ошибка " + ex.Message);
+            }
         }
 
         [HttpPost("Save")]
-        public async Task Save(TEntity entity)
+        public async Task<IActionResult> SaveAsync(TEntity entity)
         {
-            await _service.SaveAsync(entity);
+            try
+            {
+                await _core.SaveAsync(entity);
+                return Ok("Сущность сохранена");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Не удалось сохранить сущность, сообщение об ошибке: " + ex.Message);
+            }
         }
 
         [HttpPost("Delete")]
-        public async Task Delete(TEntity entity)
+        public async Task<IActionResult> DeleteAsync(TEntity entity)
         {
-            await _service.Delete(entity);
+            try
+            {
+                await _core.Delete(entity);
+                return Ok("Сущность удалена");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Не удалось удалить сущность, сообщение об ошибке: " + ex.Message);
+            }
         }
     }
 }

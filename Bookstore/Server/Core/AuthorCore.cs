@@ -1,18 +1,14 @@
-﻿using Bookstore.Shared.DbModels;
+﻿using Bookstore.Server.Data;
+using Bookstore.Shared.DbModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookstore.Server.Data.Service
+namespace Bookstore.Server.Core
 {
-    public class AuthorModelService
+    public class AuthorCore : BaseCore<AuthorModel>
     {
-        private AppDbContext _context;
+        public AuthorCore(AppDbContext context) : base(context) { }
 
-        public AuthorModelService(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<AuthorModel> GetAuthorById(int id)
+        public override async Task<AuthorModel> GetByIdAsync(int id)
         {
             var author = await _context.Authors
                 .Include(t => t.Books)

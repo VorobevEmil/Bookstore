@@ -31,7 +31,7 @@
     {
         _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
 
-        Catalogs = await _http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
+        Catalogs = await _http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetAll");
 
         TreeItemData.SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
     }

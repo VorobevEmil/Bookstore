@@ -66,9 +66,9 @@
     public List<BookModel>? Books { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Authors = await Http.GetFromJsonAsync<List<AuthorModel>>("api/Author/GetEntities");
-        PublishingHouses = await Http.GetFromJsonAsync<List<PublishingHouseModel>>("api/PublishingHouse/GetEntities");
-        Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetEntities");
-        Books = await Http.GetFromJsonAsync<List<BookModel>>("api/Book/GetEntities");
+        Authors = await Http.GetFromJsonAsync<List<AuthorModel>>("api/Author/GetAll");
+        PublishingHouses = await Http.GetFromJsonAsync<List<PublishingHouseModel>>("api/PublishingHouse/GetAll");
+        Catalogs = await Http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetAll");
+        Books = await Http.GetFromJsonAsync<List<BookModel>>("api/Book/GetAll");
     }
 }

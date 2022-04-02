@@ -3,6 +3,7 @@ using System;
 using Bookstore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220327134232_V4")]
+    partial class V4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
@@ -99,7 +101,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.BookModel", b =>
@@ -155,7 +157,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasIndex("PublishingHouseId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.CartModel", b =>
@@ -177,7 +179,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.CatalogModel", b =>
@@ -197,7 +199,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasIndex("CatalogModelId");
 
-                    b.ToTable("Catalogs", (string)null);
+                    b.ToTable("Catalogs");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.PublishingHouseModel", b =>
@@ -212,7 +214,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PublishingHouses", (string)null);
+                    b.ToTable("PublishingHouses");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -298,7 +300,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("Keys", (string)null);
+                    b.ToTable("Keys");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>

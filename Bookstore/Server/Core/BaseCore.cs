@@ -1,23 +1,24 @@
-﻿using Bookstore.Shared.DbModels;
+﻿using Bookstore.Server.Data;
+using Bookstore.Shared.DbModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookstore.Server.Data.Service
+namespace Bookstore.Server.Core
 {
-    public class BookstoreService<TEntity> where TEntity : BaseEntity
+    public abstract class BaseCore<TEntity> where TEntity : BaseEntity
     {
         protected readonly AppDbContext _context;
 
-        public BookstoreService(AppDbContext context)
+        public BaseCore(AppDbContext context)
         {
             _context = context;
         }
 
-        public virtual async Task<List<TEntity>> GetListEntitiesAsync()
+        public virtual async Task<List<TEntity>> GetAllAsync()
         {
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public virtual async Task<TEntity> GetByIdAsync(int? id)
+        public virtual async Task<TEntity> GetByIdAsync(int id)
         {
             return await _context.FindAsync<TEntity>(id);
         }
