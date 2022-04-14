@@ -27,5 +27,6 @@ namespace Bookstore.Shared.DbModels
         [Required(ErrorMessage = "Загрузите обложку книги")]
         public string? FileData { get; set; }
         public List<CartModel>? Carts { get; set; }
+        public List<BookModelOrderModel>? Orders { get; set; }
     }
 }

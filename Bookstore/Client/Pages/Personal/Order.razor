@@ -1,0 +1,90 @@
+﻿@page "/personal/order"
+@attribute [Authorize]
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>Заказы</PageTitle>
+
+@if (_allOrders == null)
+{
+
+    <div class="cart-loading" style="margin-top:10%; text-align:center;">
+        <MudText Typo="Typo.h5">Загружаем вашы заказы</MudText>
+
+        <MudImage Src="loading.gif" Height="300"></MudImage>
+    </div>
+
+}
+else if (_allOrders.Count > 0)
+{
+    <div>
+        <div class="row">
+            <div class="col">
+                <MudText Style="font-size:22px; font-weight:600; color:#363636; line-height:34px; height:100%; display:flex; align-items:center;">Заказы</MudText>
+            </div>
+
+        </div>
+        <div>
+            @foreach (var order in _allOrders)
+            {
+                <div class="p-2">
+                    <MudPaper>
+                        <div style="background-color:#f2f5f9;">
+                            <div class="p-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <MudText Style="font-weight:700; color: #001a34; font-size: 20px; line-height: 1.3;">Заказ от @(order.OrderDate.ToString("D").Split(',')[^1])</MudText>
+                                        <MudText>№ @order.Id.ToString("0000000000")</MudText>
+                                    </div>
+                                    <div class="col-6">
+                                        <MudText Style="font-weight:700; color: #001a34; font-size: 20px; line-height: 1.2;" Align="Align.Right">@order.Books.Sum(t => t.Books.Price) &#8381;<span style="font-weight:normal; font-size: 14px;">, оплачено</span></MudText>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <div style="display:flex; flex-wrap:wrap;">
+                                @foreach (var book in order.Books)
+                                {
+                                    <div style="margin:5px 10px;">
+                                        <MudLink Href="@($"catalog/book/{book.Books.Id}")">
+                                            <MudImage Class="rounded mx-auto d-block" Height="200" Src="@($"data:image/png;base64, {book.Books.FileData}")"></MudImage>
+                                        </MudLink>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </MudPaper>
+                </div>
+            }
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="cart-loading" style="text-align:center;">
+        <MudIcon Icon="@Icons.Filled.MoneyOff" Style="width:200px; height:200px;" Color="Color.Info"></MudIcon>
+        <MudText Typo="Typo.h5">Вы еще не сделали ни одного заказа</MudText>
+        <div style="margin-top:10px;">
+            <MudText>Воспользуйтесь нашим каталогом, купить книгу.</MudText>
+            <MudText>У нас всегда есть, что почитать!</MudText>
+        </div>
+        <div style="margin-top:20px;">
+            <MudButton Style="width:200px;" OnClick="NavigateToCatalog" Variant="Variant.Filled" Color="Color.Primary">Перейти в каталог</MudButton>
+        </div>
+    </div>
+}
+
+
+@code {
+    private List<OrderModel>? _allOrders;
+    protected override async Task OnInitializedAsync()
+    {
+        _allOrders = await Http.GetFromJsonAsync<List<OrderModel>>("api/Order/GetAll");
+    }
+    private void NavigateToCatalog()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

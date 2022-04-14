@@ -12,6 +12,8 @@ namespace Bookstore.Server.Helper
             services.AddTransient<CartCore>();
             services.AddTransient<CatalogCore>();
             services.AddTransient<PublishingHouseCore>();
+            services.AddTransient<OrderCore>();
+            services.AddTransient<BookOrderCore>();
 
             return services;
         }

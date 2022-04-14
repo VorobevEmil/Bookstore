@@ -9,7 +9,7 @@
 
 <PageTitle>Каталог книг в интернет магазине Книжная лавка</PageTitle>
 
-@if (SelectedBooks != null)
+@if (SelectedBooks != null && Catalogs != null)
 {
     <div class="pt-2">
         <div class="catalog">
@@ -99,7 +99,15 @@
 
             Snackbar.Configuration.PreventDuplicates = false;
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
-            Snackbar.Add($"Книга {bookTitle} добавлена в корзину", Severity.Normal);
+            Snackbar.Add($"Книга {bookTitle} добавлена в корзину", Severity.Info, configure: (configure =>
+            {
+                configure.Icon = Icons.Filled.Bookmark;
+                configure.Onclick = (snackbar) =>
+                {
+                    NavigationManager.NavigateTo("/personal/cart");
+                    return Task.CompletedTask;
+                };
+            }));
         }
     }
 

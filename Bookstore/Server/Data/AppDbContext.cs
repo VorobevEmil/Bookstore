@@ -18,7 +18,9 @@ namespace Bookstore.Server.Data
         public DbSet<PublishingHouseModel>? PublishingHouses { get; set; }
         public DbSet<CatalogModel>? Catalogs { get; set; }
         public DbSet<CartModel> Carts { get; set; }
-        public DbSet<Question> Questions { get; set; }
+        public DbSet<OrderModel> Orders { get; set; }
+        public DbSet<BookModelOrderModel> BookModelOrderModel { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -6,20 +6,20 @@ using System.Security.Claims;
 
 namespace Bookstore.Server.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class CartController : ControllerBase
+    public class OrderController : ControllerBase
     {
-        private readonly CartCore _core;
+        private readonly OrderCore _core;
 
-        public CartController(CartCore core)
+        public OrderController(OrderCore core)
         {
             _core = core;
         }
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<CartModel>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<OrderModel>>> GetAllAsync()
         {
             try
             {
@@ -32,7 +32,7 @@ namespace Bookstore.Server.Controllers
         }
 
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<CartModel>> GetByIdAsync(int id)
+        public async Task<ActionResult<OrderModel>> GetByIdAsync(int id)
         {
             try
             {
@@ -49,12 +49,12 @@ namespace Bookstore.Server.Controllers
         }
 
         [HttpPost("Save")]
-        public async Task<IActionResult> SaveAsync(CartModel cart)
+        public async Task<IActionResult> SaveAsync(OrderModel order)
         {
             try
             {
-                await _core.SaveAsync(cart);
-                return Ok();
+                await _core.SaveAsync(order);
+                return Ok(order);
             }
             catch (Exception)
             {
@@ -63,11 +63,11 @@ namespace Bookstore.Server.Controllers
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> DeleteAsync(CartModel cart)
+        public async Task<IActionResult> DeleteAsync(OrderModel order)
         {
             try
             {
-                await _core.DeleteAsync(cart);
+                await _core.DeleteAsync(order);
                 return Ok("Сущность удалена");
             }
             catch (Exception ex)

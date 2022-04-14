@@ -6,24 +6,24 @@ using System.Security.Claims;
 
 namespace Bookstore.Server.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class CartController : ControllerBase
+    public class BookOrderController : ControllerBase
     {
-        private readonly CartCore _core;
+        private readonly BookOrderCore _core;
 
-        public CartController(CartCore core)
+        public BookOrderController(BookOrderCore core)
         {
             _core = core;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<CartModel>>> GetAllAsync()
+        [HttpGet("GetAll/{orderId}")]
+        public async Task<ActionResult<IEnumerable<BookModelOrderModel>>> GetAllAsync(int orderId)
         {
             try
             {
-                return Ok(await _core.GetAllAsync(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
+                return Ok(await _core.GetAllAsync(orderId));
             }
             catch (Exception ex)
             {
@@ -32,7 +32,7 @@ namespace Bookstore.Server.Controllers
         }
 
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<CartModel>> GetByIdAsync(int id)
+        public async Task<ActionResult<BookModelOrderModel>> GetByIdAsync(int id)
         {
             try
             {
@@ -49,11 +49,11 @@ namespace Bookstore.Server.Controllers
         }
 
         [HttpPost("Save")]
-        public async Task<IActionResult> SaveAsync(CartModel cart)
+        public async Task<IActionResult> SaveAsync(BookModelOrderModel order)
         {
             try
             {
-                await _core.SaveAsync(cart);
+                await _core.SaveAsync(order);
                 return Ok();
             }
             catch (Exception)
@@ -63,11 +63,11 @@ namespace Bookstore.Server.Controllers
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> DeleteAsync(CartModel cart)
+        public async Task<IActionResult> DeleteAsync(BookModelOrderModel order)
         {
             try
             {
-                await _core.DeleteAsync(cart);
+                await _core.DeleteAsync(order);
                 return Ok("Сущность удалена");
             }
             catch (Exception ex)

@@ -1,0 +1,228 @@
+﻿@page "/personal/cart"
+@attribute [Authorize]
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+<PageTitle>Корзина</PageTitle>
+
+@if (UserCarts == null)
+{
+    <div class="cart-loading" style="margin-top:10%">
+        <MudText Typo="Typo.h5">Загружаем вашу корзину</MudText>
+
+        <MudImage Src="loading.gif" Height="300"></MudImage>
+    </div>
+}
+else if (UserCarts.Count > 0)
+{
+    <MudGrid>
+        <MudItem xs="8">
+            <div>
+                <div class="row">
+                    <div class="col">
+                        <MudText Style="font-size:22px; font-weight:600; color:#363636; line-height:34px; height:100%; display:flex; align-items:center;">Корзина</MudText>
+                    </div>
+
+                    <div class="col">
+                        <div style="display:flex; align-items:center; justify-content:flex-end;">
+                            <MudLink Href="Personal/Order">Заказы</MudLink>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" OnClick="(async() => await DeleteAllBooksFromCart())"></MudIconButton>
+                            <MudText Style="display:inline; font-size:12px;">@(SelectedCart.Count == default ? "Удалить всё" : "Удалить выбранные")</MudText>
+                        </div>
+                    </div>
+                </div>
+                <MudDivider />
+            </div>
+
+            <div class="mt-2">
+                <MudGrid>
+                    @foreach (var cart in UserCarts)
+                    {
+                        <MudItem xs="12">
+                            <MudGrid>
+
+                                <MudItem xs="2">
+                                    <MudLink Href="@($"catalog/book/{cart.Book.Id}")">
+                                        <MudImage Class="rounded mx-auto d-block" Height="142" Width="91" Src="@($"data:image/png;base64, {cart.Book.FileData}")"></MudImage>
+                                    </MudLink>
+                                </MudItem>
+                                <MudItem xs="9" Style="position:relative;">
+                                    <MudLink Class="d-flex" Href="@($"catalog/book/{cart.Book.Id}")" Color="Color.Default">@cart.Book.Title</MudLink>
+                                    <MudLink Class="d-flex" Href="@($"/catalog/author/{cart.Book.AuthorId}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@cart.Book.Author.Title</MudLink>
+                                    <div style="position:absolute; top:10px; right:0;">
+                                        <MudText>@cart.Book.Price &#8381;</MudText>
+                                    </div>
+                                    @if (SelectedCart.Count == default)
+                                    {
+                                        <div style="position:absolute; bottom:0; right:0;">
+                                            <MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Secondary" aria-label="delete" OnClick="(async() => await DeleteBookFromCart(cart))"></MudIconButton>
+                                            <MudText Style="display:inline; font-size:12px; ">Удалить</MudText>
+                                        </div>
+                                    }
+                                </MudItem>
+                                <MudItem xs="1">
+                                    <MudCheckBox T="bool" CheckedChanged="((e) => SelectCart(e, cart))"></MudCheckBox>
+                                </MudItem>
+                            </MudGrid>
+                            <MudDivider />
+                        </MudItem>
+                    }
+                </MudGrid>
+            </div>
+
+        </MudItem>
+
+        <MudItem xs="4">
+            <MudText Typo="Typo.h5" GutterBottom="true">Выбранные книги</MudText>
+            <MudPaper Class="d-flex flex-column" Outlined="true">
+                <MudList>
+                    @foreach (var cart in SelectedCart)
+                    {
+                        <MudListItem Icon="@Icons.Material.Filled.Book">
+                            <div class="d-flex">
+                                <MudText>@cart.Book.Title</MudText>
+                                <MudText Inline="true" Class="ml-auto">@cart.Book.Price&#8381;</MudText>
+                            </div>
+                        </MudListItem>
+                    }
+                    @if (SelectedCart.Count > 0)
+                    {
+                        <MudListItem>
+                            <div class="d-flex p-2">
+                                <MudButton FullWidth="true" Color="Color.Secondary" Variant="Variant.Filled" OnClick="(async() => await CreateOrder())">
+                                    <div style="display:flex;">
+                                        <div>
+                                            Оформить заказ
+                                        </div>
+                                        <div style="display:flex;">
+                                            <MudIcon Icon="@Icons.Filled.ArrowRightAlt" />
+                                        </div>
+                                    </div>
+                                </MudButton>
+                            </div>
+                        </MudListItem>
+                    }
+                </MudList>
+                <div class="mt-auto">
+                    <MudDivider />
+                    <div class="d-flex pa-4">
+                        <MudText>Цена:</MudText>
+                        <MudText Class="ml-auto"><b>@SelectedCart.Sum(t => t.Book.Price)&#8381;</b></MudText>
+                    </div>
+                </div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
+else
+{
+    <div class="cart-loading">
+        <MudIcon Icon="@Icons.Filled.RemoveShoppingCart" Style="width:200px; height:200px;" Color="Color.Warning"></MudIcon>
+        <MudText Typo="Typo.h5">Ваша корзина сейчас пуста</MudText>
+        <div style="margin-top:10px;">
+            <MudText>Воспользуйтесь нашим каталогом, чтобы ее заполнить.</MudText>
+            <MudText>У нас всегда есть, что почитать!</MudText>
+        </div>
+        <div style="margin-top:20px;">
+            <MudButton Style="width:200px;" OnClick="NavigateToCatalog" Variant="Variant.Filled" Color="Color.Primary">Перейти в каталог</MudButton>
+        </div>
+    </div>
+}
+
+
+@code {
+    public List<CartModel> UserCarts { get; set; }
+    public List<CartModel> SelectedCart { get; set; } = new List<CartModel>();
+    protected override async Task OnInitializedAsync()
+    {
+        UserCarts = await Http.GetFromJsonAsync<List<CartModel>>("api/Cart/GetAll");
+    }
+
+
+
+    private void NavigateToCatalog()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private async Task DeleteBookFromCart(CartModel cart)
+    {
+        await Http.PostAsJsonAsync("api/Cart/Delete", cart);
+        UserCarts.Remove(cart);
+    }
+
+    private async Task DeleteAllBooksFromCart()
+    {
+
+        List<CartModel> currentCart;
+        List<CartModel> containInCart = null;
+        if (SelectedCart.Count == default)
+        {
+            currentCart = UserCarts;
+        }
+        else
+        {
+            currentCart = SelectedCart;
+            containInCart = UserCarts.Where(t => !SelectedCart.Contains(t)).ToList();
+        }
+
+        foreach (var cart in currentCart)
+        {
+            await Http.PostAsJsonAsync("api/Cart/Delete", cart);
+        }
+        UserCarts.Clear();
+        SelectedCart.Clear();
+        StateHasChanged();
+        if (containInCart != null)
+        {
+            UserCarts = containInCart;
+        }
+        containInCart = null;
+    }
+
+    private async Task<bool?> ShowMessageDeleteBooks()
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Внимание",
+            "Вы действительно хотите удалить " + (SelectedCart.Count == default ? "все" : "выбранные") + " книги!",
+            yesText: "Удалить!", cancelText: "Отмена");
+        return result;
+
+    }
+
+    private async Task CreateOrder()
+    {
+        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        var selectedBooks = SelectedCart.Select(t => t.Book).ToList();
+
+        OrderModel order = new OrderModel();
+        order.UserId = user.Claims.First(t => t.Type == "sub").Value;
+        order.OrderDate = DateTime.Now;
+
+        HttpResponseMessage httpResponseMessage = await Http.PostAsJsonAsync("api/Order/Save", order);
+        if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            order = await httpResponseMessage.Content.ReadFromJsonAsync<OrderModel>();
+
+            foreach (var book in selectedBooks)
+            {
+                await Http.PostAsJsonAsync("api/BookOrder/Save", new BookModelOrderModel() { OrdersId = order.Id, BooksId = book.Id });
+            }
+
+            await DeleteAllBooksFromCart();
+        }
+
+
+    }
+
+    private void SelectCart(bool check, CartModel cart)
+    {
+        if (check)
+            SelectedCart.Add(cart);
+        else
+            SelectedCart.Remove(cart);
+    }
+}

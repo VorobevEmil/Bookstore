@@ -13,17 +13,29 @@ namespace Bookstore.Server.Core
             _context = context;
         }
 
-        public virtual async Task<List<CartModel>> GetListEntitiesAsync()
+        public async Task<List<CartModel>> GetAllAsync(string? userId)
         {
-            return await _context.Carts.ToListAsync();
+            var cart = await _context.Carts
+                .Where(t => t.UserId == userId)
+                .Include(t => t.Book)
+                .ThenInclude(t => t.Author)
+                .Include(t => t.Book)
+                .ThenInclude(t => t.PublishingHouse)
+                .ToListAsync();
+
+            cart.ForEach(t => t.Book.Carts = null);
+            cart.ForEach(t => t.Book.Author.Books = null);
+            cart.ForEach(t => t.Book.PublishingHouse.Books = null);
+
+            return cart;
         }
 
-        public virtual async Task<CartModel> GetByIdAsync(int id)
+        public async Task<CartModel> GetByIdAsync(int id)
         {
             return await _context.Carts.FindAsync(id);
         }
 
-        public virtual async Task SaveAsync(CartModel entity)
+        public async Task SaveAsync(CartModel entity)
         {
             if (entity.Id == default)
                 _context.Entry(entity).State = EntityState.Added;
@@ -32,7 +44,7 @@ namespace Bookstore.Server.Core
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task Delete(CartModel entity)
+        public async Task DeleteAsync(CartModel entity)
         {
             _context.Remove(entity);
             await _context.SaveChangesAsync();

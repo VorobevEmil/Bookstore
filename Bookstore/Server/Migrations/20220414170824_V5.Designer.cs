@@ -3,6 +3,7 @@ using System;
 using Bookstore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,12 +11,28 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220414170824_V5")]
+    partial class V5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
+
+            modelBuilder.Entity("BookModelOrderModel", b =>
+                {
+                    b.Property<int>("BooksId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OrdersId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("BooksId", "OrdersId");
+
+                    b.HasIndex("OrdersId");
+
+                    b.ToTable("BookModelOrderModel");
+                });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.ApplicationUser", b =>
                 {
@@ -156,27 +173,6 @@ namespace Bookstore.Server.Migrations
                     b.HasIndex("PublishingHouseId");
 
                     b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("Bookstore.Shared.DbModels.BookModelOrderModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("BooksId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BooksId");
-
-                    b.HasIndex("OrdersId");
-
-                    b.ToTable("BookModelOrderModel");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.CartModel", b =>
@@ -528,6 +524,21 @@ namespace Bookstore.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("BookModelOrderModel", b =>
+                {
+                    b.HasOne("Bookstore.Shared.DbModels.BookModel", null)
+                        .WithMany()
+                        .HasForeignKey("BooksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Bookstore.Shared.DbModels.OrderModel", null)
+                        .WithMany()
+                        .HasForeignKey("OrdersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Bookstore.Shared.DbModels.BookModel", b =>
                 {
                     b.HasOne("Bookstore.Shared.DbModels.AuthorModel", "Author")
@@ -553,25 +564,6 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("Catalog");
 
                     b.Navigation("PublishingHouse");
-                });
-
-            modelBuilder.Entity("Bookstore.Shared.DbModels.BookModelOrderModel", b =>
-                {
-                    b.HasOne("Bookstore.Shared.DbModels.BookModel", "Books")
-                        .WithMany("Orders")
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Bookstore.Shared.DbModels.OrderModel", "Orders")
-                        .WithMany("Books")
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Books");
-
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.CartModel", b =>
@@ -675,8 +667,6 @@ namespace Bookstore.Server.Migrations
             modelBuilder.Entity("Bookstore.Shared.DbModels.BookModel", b =>
                 {
                     b.Navigation("Carts");
-
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.CatalogModel", b =>
@@ -684,11 +674,6 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("Books");
 
                     b.Navigation("Catalogs");
-                });
-
-            modelBuilder.Entity("Bookstore.Shared.DbModels.OrderModel", b =>
-                {
-                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.PublishingHouseModel", b =>

@@ -5,7 +5,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ShoppingCart" DisableElevation="true" Size="Size.Small" Class="mr-3" />
+        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ShoppingCart" Link="/personal/cart" DisableElevation="true" Size="Size.Small" Class="mr-3" />
         <MudLink Color="Color.Default" Class="text-white" Href="authentication/profile">Здравствуйте, @context.User.Identity.Name!</MudLink>
         <MudButton OnClick="BeginSignOut" Color="Color.Default" Class="text-white">Выйти</MudButton>
     </Authorized>
