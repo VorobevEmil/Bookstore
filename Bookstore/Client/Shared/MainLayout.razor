@@ -9,27 +9,70 @@
 <MudSnackbarProvider />
 
 <MudLayout>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <MudImage Src="logo.webp" Height="45"/>
+                    Книжная лавка
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <div class="col-lg-2 d-none d-lg-block ">
+                                    <div class="nav-item">
+                                        <MudButton StartIcon="@Icons.Filled.Notes" Style="background-color:#0050e0; color:white; width:140px;">Каталог</MudButton>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 d-none d-lg-block">
+                                    <MudAutocomplete T="BookModel"
+                                                     SearchFunc="@Search"
+                                                     ToStringFunc="@(e => e.Title)"
+                                                     ValueChanged="SelectBook"
+                                                     Margin="Margin.Dense"
+                                                     Adornment="Adornment.Start"
+                                                     Class="mr-2"
+                                                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default" Variant="Variant.Outlined" InputMode="InputMode.search" />
+                                </div>
+                                <div class="col-lg-4 col-sm">
+                                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                        <li class="nav-item d-block d-lg-none " style="padding:0px 20px;">
+                                            <MudLink Href="authentication/profile" Color="Color.Default">
+                                                <div style="display:flex; flex-direction: column;">
+                                                    <MudIcon Icon="@Icons.Filled.Notes" Color="Color.Dark" />
+                                                    <MudText Color="Color.Dark">Каталог</MudText>
+                                                </div>
+                                            </MudLink>
+                                        </li>
+                                        <LoginDisplay />
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    <MudAppBar Elevation="1" Fixed="false">
-        <MudImage Src="logo.gif" Height="56" />
-        <NavMenu />
 
-        <MudSpacer />
+                    <div class="row">
+                        <div class="col-12 d-block d-lg-none">
+                            <MudAutocomplete T="BookModel"
+                                             SearchFunc="@Search"
+                                             ToStringFunc="@(e => e.Title)"
+                                             ValueChanged="SelectBook"
+                                             Margin="Margin.Dense"
+                                             Adornment="Adornment.Start"
+                                             Class="mr-2"
+                                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default" Variant="Variant.Outlined" InputMode="InputMode.search" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-        <MudAutocomplete T="BookModel"
-                         SearchFunc="@Search"
-                         ToStringFunc="@(e => e.Title)"
-                         ValueChanged="SelectBook"
-                         Margin="Margin.Dense"
-                         Adornment="Adornment.Start"
-                         Class="mr-2"
-                         Style="width:300px; float:right;"
-                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default" Variant="Variant.Outlined" InputMode="InputMode.search">
-
-
-        </MudAutocomplete>
-        <LoginDisplay />
-    </MudAppBar>
 
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large">
@@ -37,6 +80,7 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
 
 @code {
     private HttpClient _http;

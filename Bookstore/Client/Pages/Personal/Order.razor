@@ -1,7 +1,5 @@
 ﻿@page "/personal/order"
 @attribute [Authorize]
-@inject HttpClient Http
-@inject NavigationManager NavigationManager
 
 <PageTitle>Заказы</PageTitle>
 
@@ -43,7 +41,7 @@ else if (_allOrders.Count > 0)
                             </div>
                         </div>
                         <div class="p-3">
-                            <div style="display:flex; flex-wrap:wrap;">
+                            <div style="display:flex; flex-wrap:wrap; justify-content:space-between;">
                                 @foreach (var book in order.Books)
                                 {
                                     <div style="margin:5px 10px;">
@@ -74,17 +72,4 @@ else
             <MudButton Style="width:200px;" OnClick="NavigateToCatalog" Variant="Variant.Filled" Color="Color.Primary">Перейти в каталог</MudButton>
         </div>
     </div>
-}
-
-
-@code {
-    private List<OrderModel>? _allOrders;
-    protected override async Task OnInitializedAsync()
-    {
-        _allOrders = await Http.GetFromJsonAsync<List<OrderModel>>("api/Order/GetAll");
-    }
-    private void NavigateToCatalog()
-    {
-        NavigationManager.NavigateTo("/");
-    }
 }

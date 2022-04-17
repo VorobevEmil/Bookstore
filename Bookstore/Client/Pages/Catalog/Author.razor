@@ -1,5 +1,4 @@
 ﻿@page "/catalog/author/{id:int}"
-@inject IHttpClientFactory HttpClientFactory
 
 @if (AuthorModel != null)
 {
@@ -43,19 +42,4 @@
         </MudGrid>
     </div>
 
-}
-
-@code {
-    [Parameter]
-    public int Id { get; set; }
-
-    public AuthorModel? AuthorModel { get; set; }
-
-    private HttpClient _http;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
-        AuthorModel = await _http.GetFromJsonAsync<AuthorModel>($"api/Author/GetById/{Id}");
-    }
 }

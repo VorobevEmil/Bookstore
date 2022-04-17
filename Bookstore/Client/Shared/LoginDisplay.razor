@@ -3,21 +3,78 @@
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
 
-<AuthorizeView>
+@*<AuthorizeView>
     <Authorized>
-        <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ShoppingCart" Link="/personal/cart" DisableElevation="true" Size="Size.Small" Class="mr-3" />
-        <MudLink Color="Color.Default" Class="text-white" Href="authentication/profile">Здравствуйте, @context.User.Identity.Name!</MudLink>
-        <MudButton OnClick="BeginSignOut" Color="Color.Default" Class="text-white">Выйти</MudButton>
+    <div style="display:flex; align-items:center;">
+    <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ShoppingCart" Link="/personal/cart" DisableElevation="true" Size="Size.Small" Class="mr-3" />
+    <MudLink Style="height: 100%; display: flex; align-items: center; padding: 6px 8px;" Color="Color.Default" Class="text-white" Href="authentication/profile"><span>Здравствуйте, @context.User.Identity.Name!</span></MudLink>
+    <MudButton OnClick="BeginSignOut" Color="Color.Default" Class="text-white">Выйти</MudButton>
+    </div>
     </Authorized>
     <NotAuthorized>
-        <MudBreadcrumbs Items="_items">
-            <SeparatorTemplate>
-                <MudText Color="Color.Default" Style="text-white">/</MudText>
-            </SeparatorTemplate>
-            <ItemTemplate Context="item">
-                <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon" /> @item.Text</MudLink>
-            </ItemTemplate>
-        </MudBreadcrumbs>
+    <MudBreadcrumbs Items="_items">
+    <SeparatorTemplate>
+    <MudText Color="Color.Default" Style="text-white">/</MudText>
+    </SeparatorTemplate>
+    <ItemTemplate Context="item">
+    <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon" /> @item.Text</MudLink>
+    </ItemTemplate>
+    </MudBreadcrumbs>
+    </NotAuthorized>
+    </AuthorizeView>*@
+
+<AuthorizeView>
+    <Authorized>
+        <li class="nav-item" style="padding:0px 20px;">
+            <MudLink Href="authentication/profile" Color="Color.Default">
+                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                    <MudIcon Icon="@Icons.Outlined.SentimentSatisfied" Color="Color.Dark" />
+                    <MudText Color="Color.Dark">@context.User.Identity.Name</MudText>
+                </div>
+            </MudLink>
+        </li>
+        <li class="nav-item" style="padding:0px 20px;">
+            <MudLink Href="personal/order" Color="Color.Default">
+                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                    <MudIcon Icon="@Icons.Outlined.MarkunreadMailbox" Color="Color.Dark" />
+                    <MudText Color="Color.Dark">Заказы</MudText>
+                </div>
+            </MudLink>
+        </li>
+        <li class="nav-item" style="padding:0px 20px;">
+            <MudLink Href="personal/cart" Color="Color.Default">
+                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                    <MudIcon Icon="@Icons.Outlined.ShoppingCart" Color="Color.Dark" />
+                    <MudText Color="Color.Dark">Корзина</MudText>
+                </div>
+            </MudLink>
+        </li>
+        <li class="nav-item" style="padding:0px 20px;">
+            <MudLink Color="Color.Default" @onclick="BeginSignOut" Style="cursor:pointer;">
+                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                    <MudIcon Icon="@Icons.Outlined.ExitToApp" Color="Color.Dark" />
+                    <MudText Color="Color.Dark">Выйти</MudText>
+                </div>
+            </MudLink>
+        </li>
+    </Authorized>
+    <NotAuthorized>
+        <li class="nav-item" style="padding:0px 20px;">
+            <MudLink Href="authentication/login" Color="Color.Default">
+                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                    <MudIcon Icon="@Icons.Outlined.Login" Color="Color.Dark" />
+                    <MudText Color="Color.Dark">Войти</MudText>
+                </div>
+            </MudLink>
+        </li>
+        <li class="nav-item" style="padding:0px 20px;">
+            <MudLink Href="authentication/register" Color="Color.Default">
+                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                    <MudIcon Icon="@Icons.Filled.HowToReg" Color="Color.Dark" />
+                    <MudText Color="Color.Dark">Регистрация</MudText>
+                </div>
+            </MudLink>
+        </li>
     </NotAuthorized>
 </AuthorizeView>
 
