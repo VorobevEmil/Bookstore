@@ -18,6 +18,19 @@ namespace Bookstore.Server.Controllers
             _core = core;
         }
 
+        [HttpGet("GetBooksOrdersForWhichUserHasNotLeftReview")]
+        public async Task<ActionResult<List<BookModelOrderModel>>> GetBooksOrdersForWhichUserHasNotLeftReview()
+        {
+            try
+            {
+                return Ok(await _core.GetBooksOrdersForWhichUserHasNotLeftReview(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("GetAll/{orderId}")]
         public async Task<ActionResult<IEnumerable<BookModelOrderModel>>> GetAllAsync(int orderId)
         {

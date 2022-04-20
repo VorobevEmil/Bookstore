@@ -40,7 +40,7 @@ namespace Bookstore.Server.Controllers
                 if (result != null)
                     return Ok(result);
 
-                return NotFound("Не удалось найти сущность");
+                return NotFound("Не удалось найти заказ");
             }
             catch (Exception ex)
             {

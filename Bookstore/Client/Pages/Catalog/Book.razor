@@ -2,13 +2,17 @@
 
 <PageTitle>Каталог книг в интернет магазине Книжная лавка</PageTitle>
 
-@if (BookModel != null)
+@if (BookModel != null && Feedbacks != null)
 {
     <PageTitle>@BookModel.Title • @BookModel.Author.Title - купить книгу по низкой цене</PageTitle>
 
     <div style="padding-top:30px;">
         <MudGrid>
             <MudItem lg="3">
+                <div class="mb-1 d-flex">
+                    <MudRating ReadOnly="true" DisableRipple="true" SelectedValue="(Feedbacks.Count == default ? default :  Feedbacks.Sum(t => t.Rating) / Feedbacks.Count)" />
+                    <MudText Style="font-size:16px; color: #7d8290;">@Feedbacks.Count @DeclinationEnding(Feedbacks.Count)</MudText>
+                </div>
                 <MudImage Class="img-fluid w-75" Src="@($"data:image/png;base64, {BookModel.FileData}")" Alt="@BookModel.Title" />
             </MudItem>
             <MudItem lg="9">
@@ -100,4 +104,30 @@
     <div class="mt-4 border-bottom">
         <MudText Style="font-weight:700; font-size:20px;">Отзывы</MudText>
     </div>
+    @if (Feedbacks.Count > 0)
+    {
+        foreach (var feedback in Feedbacks)
+        {
+            <div class="row mt-3 border-bottom">
+                <div class="col-3" style="word-break:break-word;">
+                    <MudText>@feedback.User.UserName</MudText>
+                    <MudText>@feedback.DateFeedback.ToShortDateString()</MudText>
+
+                    <div class="mb-1 d-flex">
+                        <MudRating ReadOnly="true" DisableRipple="true" SelectedValue="@feedback.Rating" />
+                        <MudText>@feedback.Rating</MudText>
+                    </div>
+                </div>
+                <div class="col-9" style="word-break:break-word;">
+                    <MudText>@feedback.Message</MudText>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="m-5 d-flex align-items-center" style="place-content:center; width:450px; height:70px; background-color:#f2f9fa;">
+            <span>Отзывов ещё нет — вы можете быть первым.</span>
+        </div>
+    }
 }

@@ -8,7 +8,7 @@
     <Authorized>
         @{
             List<(string link, string title, string icon)> authLink = new List<(string link, string title, string icon)>() {
-                ("authentication/profile", context.User.Identity.Name, Icons.Outlined.SentimentSatisfied),
+                ("authentication/profile", context.User.Identity.Name.Split(' ')[0], Icons.Outlined.SentimentSatisfied),
                 ("personal/order", "Заказы", Icons.Outlined.MarkunreadMailbox),
                 ("personal/cart", "Корзина", Icons.Outlined.ShoppingCart),
             };
@@ -18,7 +18,7 @@
 
             <li class="nav-item" style="padding:0px 10px;">
                 <MudLink Href="@link.link" Color="Color.Default">
-                    <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                    <div style="display:flex; flex-direction: column;" class="align-items-lg-center text-lg-center">
                         <MudIcon Icon="@link.icon" Color="Color.Dark" />
                         <MudText Color="Color.Dark">@link.title</MudText>
                     </div>

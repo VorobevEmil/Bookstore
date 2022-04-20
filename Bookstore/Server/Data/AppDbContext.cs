@@ -20,6 +20,7 @@ namespace Bookstore.Server.Data
         public DbSet<CartModel> Carts { get; set; }
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<BookModelOrderModel> BookModelOrderModel { get; set; }
+        public DbSet<FeedbackModel> Feedbacks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

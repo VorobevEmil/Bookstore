@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace Bookstore.Server.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CartController : ControllerBase

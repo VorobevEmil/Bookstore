@@ -3,6 +3,7 @@
 
 <PageTitle>Заказы</PageTitle>
 
+
 @if (_allOrders == null)
 {
 
@@ -18,7 +19,17 @@ else if (_allOrders.Count > 0)
     <div>
         <div class="row">
             <div class="col">
-                <MudText Style="font-size:22px; font-weight:600; color:#363636; line-height:34px; height:100%; display:flex; align-items:center;">Заказы</MudText>
+                <div class="row">
+                    <div class="col-6">
+                        <MudText Style="font-size:22px; font-weight:600; color:#363636; line-height:34px; height:100%; display:flex; align-items:center;">Заказы</MudText>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex justify-content-end">
+                            <MudLink Color="Color.Default" Href="leave-review"><MudIcon Icon="@Icons.Filled.Edit" />Оставить отзывы</MudLink>
+                            <MudLink Color="Color.Default" Style="padding-left:10px;"><MudIcon Icon="@Icons.Filled.Message" />Мои отзывы</MudLink>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div>

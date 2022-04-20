@@ -24,7 +24,6 @@ else if (UserCarts.Count > 0)
 
                     <div class="col">
                         <div style="display:flex; align-items:center; justify-content:flex-end;">
-                            <MudLink Href="Personal/Order">Заказы</MudLink>
                             <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" OnClick="(async() => await DeleteAllBooksFromCart())"></MudIconButton>
                             <MudText Style="display:inline; font-size:12px;">@(SelectedCart.Count == default ? "Удалить всё" : "Удалить выбранные")</MudText>
                         </div>

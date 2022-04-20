@@ -1,0 +1,118 @@
+﻿@page "/leave-review"
+@using System.Security.Claims
+@attribute [Authorize]
+
+<div class="container">
+    @if (BooksOrders == null)
+    {
+        <div style="margin-top:10%; text-align:center;">
+            <MudText Typo="Typo.h5">Загружаем ваши купленные книги</MudText>
+
+            <MudImage Src="loading.gif" Height="300"></MudImage>
+        </div>
+    }
+    else if (BooksOrders.Count > 0)
+    {
+
+        <MudText Style="font-size:22px; font-weight:600; color:#363636; line-height:34px; height:100%; display:flex; align-items:center;">Оставить отзыв на купленную книгу</MudText>
+        @*<div class="row">
+            @foreach (var book in Books)
+            {
+
+            <div class="col-2">
+            <MudImage Src="@($"data:image/png;base64, {book.FileData}")" Class="img-fluid" />
+            </div>
+            <div class="col-10">
+            <MudText>@book.Title</MudText>
+            <MudText>@book.Price</MudText>
+            </div>
+            }
+            </div>*@
+        @foreach (var bookorder in BooksOrders)
+        {
+            <div class="row border-bottom mt-2">
+                <div class="col-1 mb-1">
+                    <MudLink Href="@($"catalog/book/{bookorder.Books.Id}")">
+                        <MudImage Class="img-fluid" Src="@($"data:image/png;base64, {bookorder.Books.FileData}")"></MudImage>
+                    </MudLink>
+                </div>
+                <div class="col-9" style="position:relative;">
+                    <MudLink Class="d-flex" Href="@($"catalog/book/{bookorder.Books.Id}")" Color="Color.Default">@bookorder.Books.Title</MudLink>
+
+                    <div style="position:absolute; top:10px; right:0;">
+                        <MudText>Оплачено @bookorder.Books.Price &#8381;</MudText>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="(() =>OpenDialog(bookorder))">Оставить отзыв</MudButton>
+                </div>
+            </div>
+        }
+
+    }
+    else
+    {
+        <div style="text-align:center">
+            <MudIcon Icon="@Icons.Filled.MenuBook" Style="width:200px; height:200px;" Color="Color.Warning"></MudIcon>
+            <MudText Typo="Typo.h5">К сожелению вы ещё не купили не одной книги</MudText>
+            <div style="margin-top:10px;">
+                <MudText>Воспользуйтесь нашим каталогом, чтобы ее заполнить.</MudText>
+                <MudText>У нас всегда есть, что почитать!</MudText>
+            </div>
+            <div style="margin-top:20px;">
+                <MudButton Style="width:200px;" OnClick="NavigateToCatalog" Variant="Variant.Filled" Color="Color.Primary">Перейти в каталог</MudButton>
+            </div>
+        </div>
+    }
+</div>
+
+<InputDialog SaveAsync="SaveFeedback" @bind-VisibleDialog="_visableDialog" />
+
+@code {
+    [Inject] HttpClient? Http { get; set; }
+    [Inject] NavigationManager? NavigationManager { get; set; }
+    [Inject] IJSRuntime JSRuntime { get; set; }
+    [Inject] AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    public List<BookModelOrderModel>? BooksOrders { get; set; }
+    private bool _visableDialog;
+
+    private BookModelOrderModel? _bookorder;
+
+    private string? _userId;
+
+    public void OpenDialog(BookModelOrderModel book)
+    {
+        _bookorder = book;
+        _visableDialog = true;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        BooksOrders = await Http.GetFromJsonAsync<List<BookModelOrderModel>>("api/BookOrder/GetBooksOrdersForWhichUserHasNotLeftReview");
+        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        _userId = user.Claims.First(t => t.Type == "sub").Value;
+    }
+
+    public void NavigateToCatalog()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private async Task SaveFeedback((int rating, string message) feedbackInput)
+    {
+        _visableDialog = false;
+
+        FeedbackModel feedbackModel = new FeedbackModel();
+        feedbackModel.BookOrderId = _bookorder.Id;
+        feedbackModel.Rating = feedbackInput.rating;
+        feedbackModel.Message = feedbackInput.message;
+        feedbackModel.UserId = _userId;
+
+        await Http.PostAsJsonAsync("api/Feedback/Save", feedbackModel);
+
+        BooksOrders.Remove(BooksOrders.First(t => t == _bookorder));
+
+    }
+
+}

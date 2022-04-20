@@ -14,7 +14,7 @@ namespace Bookstore.Server.Helper
             services.AddTransient<PublishingHouseCore>();
             services.AddTransient<OrderCore>();
             services.AddTransient<BookOrderCore>();
-
+            services.AddTransient<FeedbackCore>();
             return services;
         }
     }

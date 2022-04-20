@@ -13,5 +13,7 @@ namespace Bookstore.Shared.DbModels
         public int OrdersId { get; set; }
         [ForeignKey("OrdersId")]
         public OrderModel? Orders { get; set; }
+
+        public List<FeedbackModel>? Feedbacks { get; set; }
     }
 }

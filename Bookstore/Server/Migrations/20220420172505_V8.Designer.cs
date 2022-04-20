@@ -3,6 +3,7 @@ using System;
 using Bookstore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220420172505_V8")]
+    partial class V8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
@@ -227,7 +229,7 @@ namespace Bookstore.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("BookOrderId")
+                    b.Property<int>("BookId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateFeedback")
@@ -244,7 +246,7 @@ namespace Bookstore.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookOrderId");
+                    b.HasIndex("BookId");
 
                     b.HasIndex("UserId");
 
@@ -632,9 +634,9 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.FeedbackModel", b =>
                 {
-                    b.HasOne("Bookstore.Shared.DbModels.BookModelOrderModel", "BookOrder")
+                    b.HasOne("Bookstore.Shared.DbModels.BookModel", "Book")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("BookOrderId")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -642,7 +644,7 @@ namespace Bookstore.Server.Migrations
                         .WithMany("Feedbacks")
                         .HasForeignKey("UserId");
 
-                    b.Navigation("BookOrder");
+                    b.Navigation("Book");
 
                     b.Navigation("User");
                 });
@@ -725,12 +727,9 @@ namespace Bookstore.Server.Migrations
                 {
                     b.Navigation("Carts");
 
-                    b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("Bookstore.Shared.DbModels.BookModelOrderModel", b =>
-                {
                     b.Navigation("Feedbacks");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.CatalogModel", b =>

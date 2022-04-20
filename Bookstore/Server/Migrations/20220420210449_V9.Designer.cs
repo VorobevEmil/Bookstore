@@ -3,6 +3,7 @@ using System;
 using Bookstore.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookstore.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220420210449_V9")]
+    partial class V9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
@@ -227,6 +229,9 @@ namespace Bookstore.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("BookModelId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("BookOrderId")
                         .HasColumnType("INTEGER");
 
@@ -243,6 +248,8 @@ namespace Bookstore.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookModelId");
 
                     b.HasIndex("BookOrderId");
 
@@ -632,6 +639,10 @@ namespace Bookstore.Server.Migrations
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.FeedbackModel", b =>
                 {
+                    b.HasOne("Bookstore.Shared.DbModels.BookModel", null)
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("BookModelId");
+
                     b.HasOne("Bookstore.Shared.DbModels.BookModelOrderModel", "BookOrder")
                         .WithMany("Feedbacks")
                         .HasForeignKey("BookOrderId")
@@ -724,6 +735,8 @@ namespace Bookstore.Server.Migrations
             modelBuilder.Entity("Bookstore.Shared.DbModels.BookModel", b =>
                 {
                     b.Navigation("Carts");
+
+                    b.Navigation("Feedbacks");
 
                     b.Navigation("Orders");
                 });

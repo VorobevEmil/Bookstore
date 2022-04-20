@@ -17,7 +17,7 @@ namespace Bookstore.Client.Pages.Catalog
         [Parameter]
         public int Id { get; set; }
 
-
+        private List<FeedbackModel>? Feedbacks { get; set; }
         public BookModel? BookModel { get; set; }
         private HttpClient? _http;
         private ClaimsPrincipal? _user;
@@ -28,6 +28,7 @@ namespace Bookstore.Client.Pages.Catalog
 
 
             _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+            Feedbacks = await _http.GetFromJsonAsync<List<FeedbackModel>>($"api/Feedback/GetFeedbacksByBookId/{Id}");
             BookModel = await _http.GetFromJsonAsync<BookModel>($"api/Book/GetById/{Id}");
         }
         private async Task AddBookToCart(int bookId, string? bookTitle)
@@ -51,6 +52,13 @@ namespace Bookstore.Client.Pages.Catalog
                     };
                 }));
             }
+        }
+
+        public static string DeclinationEnding(int count)
+        {
+            if ((count % 100 > 10 && count % 100 < 20) || (count % 10 >= 5 && count % 10 <= 9) || count % 10 == 0) return "Отзывов";
+            else if (count % 10 == 1) return "Отзыв";
+            return "Отзыва";
         }
     }
 }

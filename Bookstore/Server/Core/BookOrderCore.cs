@@ -44,5 +44,27 @@ namespace Bookstore.Server.Core
             _context.Remove(entity);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<BookModelOrderModel>> GetBooksOrdersForWhichUserHasNotLeftReview(string userId)
+        {
+            var result = await _context.BookModelOrderModel
+                .Include(t => t.Books)
+                .Include(t => t.Orders)
+                .Include(t => t.Feedbacks)
+                .ToListAsync();
+
+            result.ForEach(t =>
+            {
+                t.Orders.Books = null;
+                t.Books.Orders = null;
+                t.Feedbacks?.ForEach(t => t.BookOrder = null);
+            });
+
+            return result
+                .Where(t => t.Orders.UserId == userId)
+                .Where(t => !(t?.Feedbacks?.Select(t => t.BookOrderId).Contains(t.Id) ?? false))
+                .ToList();
+
+        }
     }
 }
