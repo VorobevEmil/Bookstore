@@ -23,6 +23,18 @@ builder.Services.AddIdentityServer()
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.RequireUniqueEmail = false;
+    options.User.AllowedUserNameCharacters = "àáâãäå¸æçèéêëìíîïğñòóôõö÷øùúûüışÿÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞß ";
+
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+});
+
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 

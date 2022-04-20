@@ -5,34 +5,40 @@
 @if (SelectedBooks != null && Catalogs != null)
 {
     <div class="pt-2">
-        <div class="catalog">
-            <CatalogTreeView Title="Категории" Dense="true" SetValueCallback="FilterBooksByCategory" />
-        </div>
-        <div class="pt-5">
-            @if (categoryTitle != null)
-            {
-                <MudText Style="font-size:36px;font-weight:600;" Class="pt-2">@categoryTitle</MudText>
-            }
-            <MudGrid>
-                @foreach (var book in SelectedBooks)
-                {
-                    <MudItem lg="3" sm="6" xs="12">
-                        <MudPaper Elevation="2" Class="pa-4" Width="100%" Height="100%">
-                            <MudLink Href="@($"catalog/book/{book.Id}")">
-                                <MudImage Class="rounded mx-auto d-block" Src="@($"data:image/png;base64, {book.FileData}")" Alt="@book.Title" Height="300" Width="192" />
-                            </MudLink>
-                            <div class="p-3">
-                                <MudText Style="font-weight: bold;">@book.Price р.</MudText>
-                                <MudLink Class="d-inline-block" Href="@($"catalog/book/{book.Id}")" Color="Color.Default">@book.Title</MudLink>
-                                <MudLink Class="d-inline-block" Href="@($"/catalog/author/{book.AuthorId}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@book.Author.Title</MudLink>
-                                <div class="pt-2 pr-3">
-                                    <MudButton Link="@(!_user.Identity.IsAuthenticated ? "/Identity/Account/Login" : null)" OnClick="(() => AddBookToCart(book.Id, book.Title))" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">В корзину</MudButton>
-                                </div>
-                            </div>
-                        </MudPaper>
-                    </MudItem>
-                }
-            </MudGrid>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-2 d-lg-block d-flex flex-column align-items-center col-12">
+                    <CatalogTreeView Title="Категории" Dense="true" SetValueCallback="FilterBooksByCategory" />
+                </div>
+                <div class="col-lg-8 col-12">
+                    <div class="pt-5">
+                        @if (categoryTitle != null)
+                        {
+                            <MudText Style="font-size:36px;font-weight:600;" Class="pt-2">@categoryTitle</MudText>
+                        }
+                        <MudGrid>
+                            @foreach (var book in SelectedBooks)
+                            {
+                                <MudItem lg="3" sm="6" xs="12">
+                                    <MudPaper Elevation="2" Class="pa-4" Width="100%" Height="100%">
+                                        <MudLink Href="@($"catalog/book/{book.Id}")">
+                                            <MudImage Class="rounded mx-auto d-block img-fluid" Src="@($"data:image/png;base64, {book.FileData}")" Alt="@book.Title" />
+                                        </MudLink>
+                                        <div class="p-3">
+                                            <MudText Style="font-weight: bold;">@book.Price р.</MudText>
+                                            <MudLink Class="d-inline-block" Href="@($"catalog/book/{book.Id}")" Color="Color.Default">@book.Title</MudLink>
+                                            <MudLink Class="d-inline-block" Href="@($"/catalog/author/{book.AuthorId}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@book.Author.Title</MudLink>
+                                            <div class="pt-2 pr-3">
+                                                <MudButton Link="@(!_user.Identity.IsAuthenticated ? "/Identity/Account/Login" : null)" OnClick="(() => AddBookToCart(book.Id, book.Title))" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">В корзину</MudButton>
+                                            </div>
+                                        </div>
+                                    </MudPaper>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 }

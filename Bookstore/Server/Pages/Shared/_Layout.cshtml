@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Bookstore.Server</title>
+    <title>@ViewData["Title"] - Книжный интернет-магазин "Книжная Лавка"</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.css" />
@@ -21,11 +21,11 @@
         <link rel="stylesheet" href="~/Identity/css/site.css" asp-append-version="true" />
     </environment>
 </head>
-<body>
+<body style="overflow-x:hidden;">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" href="~/">Bookstore.Server</a>
+                <a class="navbar-brand" href="~/">Книжная Лавка</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -41,8 +41,8 @@
                     else
                     {
                         throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
-                            "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
-                            $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
+                        "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
+                        $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
                     }
                 </div>
             </div>
@@ -55,18 +55,31 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="footer border-top pl-3 text-muted">
-        <div class="container">
-        &copy; 2022 - Bookstore.Server
-            @{
-                var foundPrivacy = Url.Page("/Privacy", new { area = "" });
-            }
-            @if (foundPrivacy != null)
-            {
-                <a asp-area="" asp-page="/Privacy">Privacy</a>
-            }
+
+    <footer class="navbar-fixed-bottom row-fluid navbar-light bg-light" style="position:absolute; bottom:0; width:100%;">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            @*<AuthorizeView Roles="Admin">
+                <Authorized>
+                <li class="nav-item"><a href="/admin" class="nav-link px-2 text-muted d-flex align-items-start"><MudIcon Icon="@Icons.Filled.AdminPanelSettings"/>Панель управления</a></li>
+                </Authorized>
+                </AuthorizeView>*@
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+        </ul>
+        <div class="row">
+            <div class="col-12">
+                <p class="text-center text-muted"
+                   style="width:350px; display: block; margin-left: auto; margin-right: auto;">
+                    © 2022, ООО «Книжная Лавка».<br />
+                    Использование материалов сайта возможно только с активной ссылкой на bookstore.ru.
+                </p>
+            </div>
         </div>
     </footer>
+
 
     <environment include="Development">
         <script src="~/Identity/lib/jquery/dist/jquery.js"></script>

@@ -9,7 +9,7 @@
     <div style="padding-top:30px;">
         <MudGrid>
             <MudItem lg="3">
-                <MudImage Style="max-width: 100%;max-height: 100%;" Src="@($"data:image/png;base64, {BookModel.FileData}")" Alt="@BookModel.Title" />
+                <MudImage Class="img-fluid w-75" Src="@($"data:image/png;base64, {BookModel.FileData}")" Alt="@BookModel.Title" />
             </MudItem>
             <MudItem lg="9">
                 <MudText Style="font-size: 24px; font-weight:800;">@BookModel.Title</MudText>
@@ -17,48 +17,49 @@
 
                 <MudDivider Style="margin-top:70px;" />
 
-                <MudGrid>
-                    <MudItem lg="6">
+                <div class="row">
+                    <div class="col-md-6 col-12">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-lg-4 col-6">
                                 <MudText Style="font-size:16px; color: #7d8290;">ID товара</MudText>
                             </div>
-                            <div class="col-8">
+                            <div class="col-lg-8 col-6">
                                 <MudText Style="font-size:16px;">@BookModel.Id</MudText>
                             </div>
-                            <div class="col-4">
+                            <div class="col-lg-4 col-6">
                                 <MudText Style="font-size:16px; color: #7d8290;">Автор</MudText>
                             </div>
-                            <div class="col-8">
+                            <div class="col-lg-8 col-6">
                                 <MudText Style="font-size:16px;">@BookModel.Author.Title</MudText>
                             </div>
-                            <div class="col-4">
+                            <div class="col-lg-4 col-6">
                                 <MudText Style="font-size:16px; color: #7d8290;">Раздел</MudText>
                             </div>
-                            <div class="col-8">
+                            <div class="col-lg-8 col-6">
                                 <MudText Style="font-size:16px;">@BookModel.Catalog.Title</MudText>
                             </div>
-                            <div class="col-4">
+                            <div class="col-lg-4 col-6">
                                 <MudText Style="font-size:16px; color: #7d8290;">Издательство</MudText>
                             </div>
-                            <div class="col-8">
+                            <div class="col-lg-8 col-6">
                                 <MudText Style="font-size:16px;">@BookModel.PublishingHouse.Title</MudText>
                             </div>
-                            <div class="col-4">
+                            <div class="col-lg-4 col-6">
                                 <MudText Style="font-size:16px; color: #7d8290;">Год издания</MudText>
                             </div>
-                            <div class="col-8">
+                            <div class="col-lg-8 col-6">
                                 <MudText Style="font-size:16px;">@BookModel.YearPublication</MudText>
                             </div>
-                            <div class="col-4">
+                            <div class="col-lg-4 col-6">
                                 <MudText Style="font-size:16px; color: #7d8290;">Кол-во страниц</MudText>
                             </div>
-                            <div class="col-8">
+                            <div class="col-lg-8 col-6">
                                 <MudText Style="font-size:16px;">@BookModel.NumberPages</MudText>
                             </div>
                         </div>
-                    </MudItem>
-                    <MudItem lg="6">
+                    </div>
+                    <div class="col-md-6 col-12">
+
                         <div style="padding:38px;">
 
                             <MudPaper Square="true" Style="background-color:rgba(38, 169, 224, 0.1);">
@@ -71,15 +72,15 @@
                                 </div>
                             </MudPaper>
                         </div>
-                    </MudItem>
-                </MudGrid>
+                    </div>
+                </div>
 
             </MudItem>
         </MudGrid>
     </div>
 
     <div class="row" style="padding-top:20px;">
-        <div class="col-6">
+        <div class="col-lg-6 col-12">
             <MudText Style="font-size: 24px; font-weight:900;">О товаре</MudText>
             <MudText Style="font-size: 16px;">@BookModel.AboutProduct</MudText>
         </div>
@@ -88,10 +89,15 @@
     @if (BookModel.Annotation != null)
     {
         <div class="row" style="padding-top:20px;">
-            <div class="col-6">
+            <div class="col-lg-6 col-12">
                 <MudText Style="font-size: 24px; font-weight:900;">Аннотация</MudText>
                 <MudText Style="font-size: 16px;">@BookModel.Annotation</MudText>
             </div>
         </div>
     }
+
+    // TODO сделать отзывы
+    <div class="mt-4 border-bottom">
+        <MudText Style="font-weight:700; font-size:20px;">Отзывы</MudText>
+    </div>
 }

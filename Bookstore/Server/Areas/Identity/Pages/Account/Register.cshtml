@@ -4,38 +4,53 @@
     ViewData["Title"] = "Регистрация";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="container" style="padding-top:10vh;">
+    <div class="row">
+        <div class="col-md-6 d-none d-md-block">
+            <div>
+                <img src="~/login logo.png" class="img-fluid" />
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div>
+                <form  id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<div class="row">
-    <div class="col-md-6">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Создайте новый аккаунт.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
-                <input asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" />
-                <label asp-for="Input.Username"></label>
-                <span asp-validation-for="Input.Username" class="text-danger"></span>
+                    <h1 class="h3 mb-3 font-weight-normal text-center">Регистрация</h1>
+                    <div class=mt-1>
+                        <label asp-for="Input.FirstName" class="sr-only">Имя</label>
+                        <input asp-for="Input.FirstName" type="text" class="form-control" placeholder="Имя" required="" autofocus="">
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class=mt-1>
+                        <label asp-for="Input.LastName" class="sr-only">Фамилия</label>
+                        <input asp-for="Input.LastName" type="text" class="form-control" placeholder="Фамилия" required="" autofocus="">
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                    <div class=mt-1>
+                        <label asp-for="Input.Email" class="sr-only">Адрес эл. почты</label>
+                        <input asp-for="Input.Email" type="email" class="form-control" placeholder="Адрес эл. почты" required="" autofocus="">
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class=mt-1>
+                        <label asp-for="Input.Password" class="sr-only">Пароль</label>
+                        <input asp-for="Input.Password" type="password" class="form-control" placeholder="Пароль" required="">
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class=mt-1>
+                        <label asp-for="Input.ConfirmPassword" class="sr-only">Повторите пароль</label>
+                        <input asp-for="Input.ConfirmPassword" type="password" class="form-control" placeholder="Повторите пароль" required="">
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-floating">
-                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="true" />
-                <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.Password"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.ConfirmPassword"></label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Зарегистрироваться</button>
-        </form>
+        </div>
     </div>
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

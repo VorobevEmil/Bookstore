@@ -2,54 +2,31 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
-
-@*<AuthorizeView>
-    <Authorized>
-    <div style="display:flex; align-items:center;">
-    <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.ShoppingCart" Link="/personal/cart" DisableElevation="true" Size="Size.Small" Class="mr-3" />
-    <MudLink Style="height: 100%; display: flex; align-items: center; padding: 6px 8px;" Color="Color.Default" Class="text-white" Href="authentication/profile"><span>Здравствуйте, @context.User.Identity.Name!</span></MudLink>
-    <MudButton OnClick="BeginSignOut" Color="Color.Default" Class="text-white">Выйти</MudButton>
-    </div>
-    </Authorized>
-    <NotAuthorized>
-    <MudBreadcrumbs Items="_items">
-    <SeparatorTemplate>
-    <MudText Color="Color.Default" Style="text-white">/</MudText>
-    </SeparatorTemplate>
-    <ItemTemplate Context="item">
-    <MudLink Color="Color.Default" Class="text-white" Href="@item.Href"><MudIcon Icon="@item.Icon" /> @item.Text</MudLink>
-    </ItemTemplate>
-    </MudBreadcrumbs>
-    </NotAuthorized>
-    </AuthorizeView>*@
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <AuthorizeView>
     <Authorized>
-        <li class="nav-item" style="padding:0px 20px;">
-            <MudLink Href="authentication/profile" Color="Color.Default">
-                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
-                    <MudIcon Icon="@Icons.Outlined.SentimentSatisfied" Color="Color.Dark" />
-                    <MudText Color="Color.Dark">@context.User.Identity.Name</MudText>
-                </div>
-            </MudLink>
-        </li>
-        <li class="nav-item" style="padding:0px 20px;">
-            <MudLink Href="personal/order" Color="Color.Default">
-                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
-                    <MudIcon Icon="@Icons.Outlined.MarkunreadMailbox" Color="Color.Dark" />
-                    <MudText Color="Color.Dark">Заказы</MudText>
-                </div>
-            </MudLink>
-        </li>
-        <li class="nav-item" style="padding:0px 20px;">
-            <MudLink Href="personal/cart" Color="Color.Default">
-                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
-                    <MudIcon Icon="@Icons.Outlined.ShoppingCart" Color="Color.Dark" />
-                    <MudText Color="Color.Dark">Корзина</MudText>
-                </div>
-            </MudLink>
-        </li>
-        <li class="nav-item" style="padding:0px 20px;">
+        @{
+            List<(string link, string title, string icon)> authLink = new List<(string link, string title, string icon)>() {
+                ("authentication/profile", context.User.Identity.Name, Icons.Outlined.SentimentSatisfied),
+                ("personal/order", "Заказы", Icons.Outlined.MarkunreadMailbox),
+                ("personal/cart", "Корзина", Icons.Outlined.ShoppingCart),
+            };
+        }
+        @foreach (var link in authLink)
+        {
+
+            <li class="nav-item" style="padding:0px 10px;">
+                <MudLink Href="@link.link" Color="Color.Default">
+                    <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                        <MudIcon Icon="@link.icon" Color="Color.Dark" />
+                        <MudText Color="Color.Dark">@link.title</MudText>
+                    </div>
+                </MudLink>
+            </li>
+        }
+
+        <li class="nav-item" style="padding:0px 10px;">
             <MudLink Color="Color.Default" @onclick="BeginSignOut" Style="cursor:pointer;">
                 <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
                     <MudIcon Icon="@Icons.Outlined.ExitToApp" Color="Color.Dark" />
@@ -59,35 +36,30 @@
         </li>
     </Authorized>
     <NotAuthorized>
-        <li class="nav-item" style="padding:0px 20px;">
-            <MudLink Href="authentication/login" Color="Color.Default">
-                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
-                    <MudIcon Icon="@Icons.Outlined.Login" Color="Color.Dark" />
-                    <MudText Color="Color.Dark">Войти</MudText>
-                </div>
-            </MudLink>
-        </li>
-        <li class="nav-item" style="padding:0px 20px;">
-            <MudLink Href="authentication/register" Color="Color.Default">
-                <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
-                    <MudIcon Icon="@Icons.Filled.HowToReg" Color="Color.Dark" />
-                    <MudText Color="Color.Dark">Регистрация</MudText>
-                </div>
-            </MudLink>
-        </li>
+        @foreach (var link in notAuthLink)
+        {
+            <li class="nav-item" style="padding:0px 10px;">
+                <MudLink Href="@link.link" Color="Color.Default">
+                    <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
+                        <MudIcon Icon="@link.icon" Color="Color.Dark" />
+                        <MudText Color="Color.Dark">@link.title</MudText>
+                    </div>
+                </MudLink>
+            </li>
+        }
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
+    private List<(string link, string title, string icon)> notAuthLink = new List<(string, string, string)>()
+    {
+            ("authentication/login", "Войти", Icons.Outlined.Login),
+            ("authentication/register", "Регистрация", Icons.Outlined.HowToReg),
+    };
+
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();
         Navigation.NavigateTo("authentication/logout");
     }
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Войти", href: "authentication/login", icon: Icons.Filled.Login),
-        new BreadcrumbItem("Регистрация", href: "authentication/register", icon: Icons.Filled.HowToReg)
-    };
 }

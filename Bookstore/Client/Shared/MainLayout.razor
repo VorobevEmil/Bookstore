@@ -4,16 +4,16 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 
+
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
-
-<MudLayout>
+<MudLayout Class="d-flex flex-column min-vh-100" Style="overflow-x:hidden;">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
                 <a class="navbar-brand" href="/">
-                    <MudImage Src="logo.webp" Height="45"/>
+                    <MudImage Src="logo.png" Height="45" />
                     Книжная лавка
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,15 @@
                             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <div class="col-lg-2 d-none d-lg-block ">
                                     <div class="nav-item">
-                                        <MudButton StartIcon="@Icons.Filled.Notes" Style="background-color:#0050e0; color:white; width:140px;">Каталог</MudButton>
+                                        <MudLink Href="/">
+                                            <MudButton StartIcon="@Icons.Filled.Notes" Style="background-color:#0050e0; color:white; width:140px;">Каталог</MudButton>
+                                        </MudLink>
+                                        @* <MudLink Href="/">
+                                            <div class="rounded-2" style="background-color:#0050e0; color:white; text-align:center; font-weight:400;">
+                                            <MudIcon Icon="@Icons.Filled.Notes" />
+                                            <span>Каталог</span>
+                                            </div>
+                                            </MudLink>*@
                                     </div>
                                 </div>
                                 <div class="col-lg-6 d-none d-lg-block">
@@ -39,8 +47,8 @@
                                                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Default" Variant="Variant.Outlined" InputMode="InputMode.search" />
                                 </div>
                                 <div class="col-lg-4 col-sm">
-                                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                        <li class="nav-item d-block d-lg-none " style="padding:0px 20px;">
+                                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex justify-content-lg-end">
+                                        <li class="nav-item d-block d-lg-none " style="padding:0px 10px;">
                                             <MudLink Href="authentication/profile" Color="Color.Default">
                                                 <div style="display:flex; flex-direction: column;">
                                                     <MudIcon Icon="@Icons.Filled.Notes" Color="Color.Dark" />
@@ -73,12 +81,50 @@
         </nav>
     </header>
 
-
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large">
+        <MudContainer MaxWidth="MaxWidth.Large" Fixed="@(NavigationManager.Uri.Split('/').Count() == 4 ? true : false)">
             @Body
         </MudContainer>
     </MudMainContent>
+
+    <footer class="py-3 my-4 navbar-light bg-light">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    <li class="nav-item"><a href="/admin" class="nav-link px-2 text-muted d-flex align-items-start"><MudIcon Icon="@Icons.Filled.AdminPanelSettings"/>Панель управления</a></li>
+                </Authorized>
+            </AuthorizeView>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Ссылка</a></li>
+        </ul>
+        <div class="row">
+
+            <div class="d-none d-md-block col-md-4">
+                <MudImage Src="logo.png" Width="130" Style="display: block; margin-left: auto; margin-right: auto"></MudImage>
+            </div>
+            <div class="col-12 col-md-4">
+                <p class="text-center text-muted" style="width:350px; display: block; margin-left: auto; margin-right: auto">Присоединяйтесь к нам в соцсетях</p>
+                <div style="text-align:center;">
+                    <MudIcon Color="Color.Primary" Style="height:40px; width:40px;" Icon="@Icons.Custom.Brands.Facebook" />
+                    <MudIcon Color="Color.Secondary" Style="height:40px; width:40px;" Icon="@Icons.Custom.Brands.Instagram" />
+                    <MudIcon Color="Color.Info" Style="height:40px; width:40px;" Icon="@Icons.Custom.Brands.Twitter" />
+                    <MudIcon Color="Color.Info" Style="height:40px; width:40px;" Icon="@Icons.Custom.Brands.Telegram" />
+                    <MudIcon Color="Color.Secondary" Style="height:40px; width:40px;" Icon="@Icons.Custom.Brands.Pinterest" />
+
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <p class="text-center text-muted"
+                   style="width:350px; display: block; margin-left: auto; margin-right: auto;">
+                    © 2022, ООО «Книжная Лавка».<br />
+                    Использование материалов сайта возможно только с активной ссылкой на bookstore.ru.
+                </p>
+            </div>
+        </div>
+    </footer>
 </MudLayout>
 
 
