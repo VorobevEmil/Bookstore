@@ -23,7 +23,6 @@ namespace Bookstore.Server.Core
                 .ThenInclude(t => t.PublishingHouse)
                 .ToListAsync();
 
-            cart.ForEach(t => t.Book.Carts = null);
             cart.ForEach(t => t.Book.Author.Books = null);
             cart.ForEach(t => t.Book.PublishingHouse.Books = null);
 

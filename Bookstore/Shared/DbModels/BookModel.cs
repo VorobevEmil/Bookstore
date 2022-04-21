@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Bookstore.Shared.DbModels
 {
     public class BookModel : BaseEntity
     {
         [Required(ErrorMessage = "Название книги обязательно для ввода")]
-        public override string? Title {get; set;}
+        public override string? Title { get; set; }
         [Required(ErrorMessage = "Напишите описание книги")]
         public string? AboutProduct { get; set; }
         public string? Annotation { get; set; }
@@ -26,6 +27,7 @@ namespace Bookstore.Shared.DbModels
         public int? Price { get; set; }
         [Required(ErrorMessage = "Загрузите обложку книги")]
         public string? FileData { get; set; }
+        [JsonIgnore]
         public List<CartModel>? Carts { get; set; }
         public List<BookModelOrderModel>? Orders { get; set; }
     }
