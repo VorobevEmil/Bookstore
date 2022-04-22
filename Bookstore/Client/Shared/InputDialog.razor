@@ -12,17 +12,17 @@
 
         <MudText>Ваш отзыв</MudText>
 
-        <MudTextField id="inputTitle" @bind-Value="InputTitle" autocomplete="off" T="string" Lines="4" Variant="Variant.Outlined"></MudTextField>
+        <MudTextField id="inputTitle" @bind-Value="Message" autocomplete="off" T="string" Lines="4" Variant="Variant.Outlined"></MudTextField>
 
     </DialogContent>
     <DialogActions>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Cancel" Class="px-10">Отмена</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(() => SaveAsync.InvokeAsync((Rating,InputTitle)))" Class="px-10">Сохранить</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="(() => { SaveAsync.InvokeAsync((Rating,Message)); Message = string.Empty; })" Class="px-10">Сохранить</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
-    [Parameter] public string? InputTitle { get; set; }
+    [Parameter] public string? Message { get; set; }
 
     private bool _visibleDialog;
 
@@ -42,16 +42,13 @@
             }
         }
     }
-    [Parameter] public string? TitleName { get; set; }
     [Parameter] public EventCallback<bool> VisibleDialogChanged { get; set; }
 
     [Parameter] public EventCallback<(int, string)> SaveAsync { get; set; }
 
-    [Parameter] public bool IsNew { get; set; }
-
 
     private int _rating = 1;
-    private int Rating
+    [Parameter] public int Rating
     {
         get => _rating;
         set
@@ -67,5 +64,6 @@
     private void Cancel()
     {
         VisibleDialog = false;
+        Message = string.Empty;
     }
 }

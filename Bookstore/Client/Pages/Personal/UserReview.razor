@@ -1,0 +1,107 @@
+﻿@page "/user-review"
+@attribute [Authorize]
+
+
+
+@if (Feedbacks == null)
+{
+    <div style="text-align:center; margin-top:10%">
+        <MudText Typo="Typo.h5">Загружаем ваши отзывы</MudText>
+
+        <MudImage Src="loading.gif" Height="300"></MudImage>
+    </div>
+}
+else if (Feedbacks.Count > 0)
+{
+    <div class="container">
+        <div class="row border-bottom d-none d-lg-flex">
+            <div class="col-1">
+                <MudText>Книга</MudText>
+            </div>
+            <div class="col-7">
+                <MudText>Отзыв и оценка</MudText>
+            </div>
+            <div class="col-2">
+                <MudText>Дата отзыва</MudText>
+            </div>
+            <div class="col-2"></div>
+        </div>
+
+        @foreach (var feedback in Feedbacks)
+        {
+            <div class="row border-bottom mt-3 pb-3 align-items-lg-stretch d-flex align-items-center">
+                <div class="col-lg-1 col-12">
+                    <MudLink Href="@($"catalog/book/{feedback.BookOrder.BooksId}")">
+                        <MudImage Class="img-fluid" Src="@($"data:image/png;base64, {feedback.BookOrder.Books.FileData}")"></MudImage>
+                    </MudLink>
+                </div>
+                <div class="col-lg-7 col-12">
+                    <div class="mb-1 d-flex">
+                        <MudRating ReadOnly="true" DisableRipple="true" SelectedValue="@feedback.Rating" />
+                        <MudText>@feedback.Rating</MudText>
+                    </div>
+                    <div>
+                        <MudText>@feedback.Message</MudText>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <MudText>@feedback.DateFeedback.ToString("D").Split(',')[^1]</MudText>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="(() => EditFeedback(feedback))">Редактировать</MudButton>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div style="text-align:center">
+        <MudIcon Icon="@Icons.Filled.Stars" Style="width:200px; height:200px;" Color="Color.Warning"></MudIcon>
+        <MudText Typo="Typo.h5">Вы ещё не оставляли отзывов.</MudText>
+        <div style="margin-top:10px;">
+            <MudText>Перейдите на страницу для заполнения отзывов, чтобы добавить их.</MudText>
+        </div>
+        <div style="margin-top:20px;">
+            <MudButton Style="width:200px;" OnClick="NavigateToCatalog" Variant="Variant.Filled" Color="Color.Primary">Оставить отзывы</MudButton>
+        </div>
+    </div>
+}
+
+<InputDialog Rating="@_selectedFeedback.Rating" Message="@_selectedFeedback.Message" SaveAsync="SaveFeedbackAsync" @bind-VisibleDialog="_visableDialog" />
+
+@code {
+    private List<FeedbackModel>? Feedbacks { get; set; }
+    [Inject] private HttpClient? Http { get; set; }
+    [Inject] private NavigationManager? NavigationManager { get; set; }
+
+    private FeedbackModel? _selectedFeedback = new FeedbackModel();
+
+    private bool _visableDialog;
+
+    private void NavigateToCatalog()
+    {
+        NavigationManager.NavigateTo("leave-review");
+    }
+    private void EditFeedback(FeedbackModel feedback)
+    {
+        _selectedFeedback = feedback;
+        _visableDialog = true;
+    }
+
+    private async Task SaveFeedbackAsync((int rating, string message) feedbackInput)
+    {
+        _visableDialog = false;
+
+        _selectedFeedback.Rating = feedbackInput.rating;
+        _selectedFeedback.Message = feedbackInput.message;
+        _selectedFeedback.DateFeedback = DateTime.Now;
+
+        await Http.PostAsJsonAsync("api/Feedback/Save", _selectedFeedback);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Feedbacks = await Http.GetFromJsonAsync<List<FeedbackModel>>("api/Feedback/GetFeedbacksByUserId");
+    }
+}

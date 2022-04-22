@@ -32,6 +32,19 @@ namespace Bookstore.Server.Controllers
             }
         }
 
+        [HttpGet("GetFeedbacksByUserId")]
+        public async Task<ActionResult<List<FeedbackModel>>> GetFeedbacksByUserId()
+        {
+            try
+            {
+                return Ok(await _core.GetFeedbacksByUserId(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("Save")]
         public async Task<IActionResult> SaveAsync(FeedbackModel feedback)
         {

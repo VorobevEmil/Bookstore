@@ -3,7 +3,7 @@
 @if (Catalogs != null)
 {
     <MudText Class="mt-3 ml-5" Style="font-weight:800">@Title</MudText>
-    <MudTreeView Width="300px" T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetValueCallback" Dense="Dense">
+    <MudTreeView T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetValueCallback" Dense="Dense">
         <ItemTemplate>
             <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
         </ItemTemplate>

@@ -4,59 +4,61 @@
 
 <PageTitle>Панель Администратора</PageTitle>
 
-@if(Authors != null && PublishingHouses != null && Catalogs != null && Books != null)
+@if (Authors != null && PublishingHouses != null && Catalogs != null && Books != null)
 {
-    <GenericTable TEntity="AuthorModel" Entities="Authors" Title="Авторы" LinkEdit="Author">
-        <ChildHeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Полное Имя</MudTh>
-            <MudTh></MudTh>
-        </ChildHeaderContent>
-        <ChildRowTemplate Context="model">
-            <MudTd DataLabel="Id">@model.Id</MudTd>
-            <MudTd DataLabel="Полное Имя">@model.Title</MudTd>
-            <MudTd><MudLink Href="@($"/Admin/Author/{model.Id}")">Ред.</MudLink></MudTd>
-        </ChildRowTemplate>
-    </GenericTable>
+    <div class="container">
+        <GenericTable TEntity="AuthorModel" Entities="Authors" Title="Авторы" LinkEdit="Author">
+            <ChildHeaderContent>
+                <MudTh>Id</MudTh>
+                <MudTh>Полное Имя</MudTh>
+                <MudTh></MudTh>
+            </ChildHeaderContent>
+            <ChildRowTemplate Context="model">
+                <MudTd DataLabel="Id">@model.Id</MudTd>
+                <MudTd DataLabel="Полное Имя">@model.Title</MudTd>
+                <MudTd><MudLink Href="@($"/Admin/Author/{model.Id}")">Ред.</MudLink></MudTd>
+            </ChildRowTemplate>
+        </GenericTable>
 
-    <GenericTable TEntity="PublishingHouseModel" Entities="PublishingHouses" Title="Издательства" LinkEdit="publishing-house">
-        <ChildHeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Название издательства</MudTh>
-            <MudTh></MudTh>
-        </ChildHeaderContent>
-        <ChildRowTemplate Context="model">
-            <MudTd DataLabel="Id">@model.Id</MudTd>
-            <MudTd DataLabel="Название издательства">@model.Title</MudTd>
-            <MudTd><MudLink Href="@($"/Admin/publishing-house/{model.Id}")">Ред.</MudLink></MudTd>
-        </ChildRowTemplate>
-    </GenericTable>
+        <GenericTable TEntity="PublishingHouseModel" Entities="PublishingHouses" Title="Издательства" LinkEdit="publishing-house">
+            <ChildHeaderContent>
+                <MudTh>Id</MudTh>
+                <MudTh>Название издательства</MudTh>
+                <MudTh></MudTh>
+            </ChildHeaderContent>
+            <ChildRowTemplate Context="model">
+                <MudTd DataLabel="Id">@model.Id</MudTd>
+                <MudTd DataLabel="Название издательства">@model.Title</MudTd>
+                <MudTd><MudLink Href="@($"/Admin/publishing-house/{model.Id}")">Ред.</MudLink></MudTd>
+            </ChildRowTemplate>
+        </GenericTable>
 
-    <GenericTable TEntity="CatalogModel" Entities="Catalogs" Title="Категории" LinkEdit="Catalog">
-        <ChildHeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Название категории</MudTh>
-            <MudTh></MudTh>
-        </ChildHeaderContent>
-        <ChildRowTemplate Context="model">
-            <MudTd DataLabel="Id">@model.Id</MudTd>
-            <MudTd DataLabel="Название категории">@model.Title</MudTd>
-            <MudTd><MudLink Href="@($"/Admin/Catalog/{model.Id}")">Ред.</MudLink></MudTd>
-        </ChildRowTemplate>
-    </GenericTable>
+        <GenericTable TEntity="CatalogModel" Entities="Catalogs" Title="Категории" LinkEdit="Catalog">
+            <ChildHeaderContent>
+                <MudTh>Id</MudTh>
+                <MudTh>Название категории</MudTh>
+                <MudTh></MudTh>
+            </ChildHeaderContent>
+            <ChildRowTemplate Context="model">
+                <MudTd DataLabel="Id">@model.Id</MudTd>
+                <MudTd DataLabel="Название категории">@model.Title</MudTd>
+                <MudTd><MudLink Href="@($"/Admin/Catalog/{model.Id}")">Ред.</MudLink></MudTd>
+            </ChildRowTemplate>
+        </GenericTable>
 
-    <GenericTable TEntity="BookModel" Entities="Books" Title="Книги" LinkEdit="Book">
-        <ChildHeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Название книги</MudTh>
-            <MudTh></MudTh>
-        </ChildHeaderContent>
-        <ChildRowTemplate Context="model">
-            <MudTd DataLabel="Id">@model.Id</MudTd>
-            <MudTd DataLabel="Название книги">@model.Title</MudTd>
-            <MudTd><MudLink Href="@($"/Admin/Book/{model.Id}")">Ред.</MudLink></MudTd>
-        </ChildRowTemplate>
-    </GenericTable>
+        <GenericTable TEntity="BookModel" Entities="Books" Title="Книги" LinkEdit="Book">
+            <ChildHeaderContent>
+                <MudTh>Id</MudTh>
+                <MudTh>Название книги</MudTh>
+                <MudTh></MudTh>
+            </ChildHeaderContent>
+            <ChildRowTemplate Context="model">
+                <MudTd DataLabel="Id">@model.Id</MudTd>
+                <MudTd DataLabel="Название книги">@model.Title</MudTd>
+                <MudTd><MudLink Href="@($"/Admin/Book/{model.Id}")">Ред.</MudLink></MudTd>
+            </ChildRowTemplate>
+        </GenericTable>
+    </div>
 }
 
 @code {

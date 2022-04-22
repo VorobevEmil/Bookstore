@@ -27,7 +27,7 @@ namespace Bookstore.Shared.DbModels
         public int? Price { get; set; }
         [Required(ErrorMessage = "Загрузите обложку книги")]
         public string? FileData { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public List<CartModel>? Carts { get; set; }
         public List<BookModelOrderModel>? Orders { get; set; }
     }

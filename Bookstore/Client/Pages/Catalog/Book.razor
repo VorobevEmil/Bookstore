@@ -10,7 +10,7 @@
         <MudGrid>
             <MudItem lg="3">
                 <div class="mb-1 d-flex">
-                    <MudRating ReadOnly="true" DisableRipple="true" SelectedValue="(Feedbacks.Count == default ? default :  Feedbacks.Sum(t => t.Rating) / Feedbacks.Count)" />
+                    <MudRating ReadOnly="true" DisableRipple="true" SelectedValue="(Feedbacks.Count == default ? default :  (int)Math.Round( Feedbacks.Sum(t => t.Rating) / (double)Feedbacks.Count, 0, MidpointRounding.AwayFromZero))" />
                     <MudText Style="font-size:16px; color: #7d8290;">@Feedbacks.Count @DeclinationEnding(Feedbacks.Count)</MudText>
                 </div>
                 <MudImage Class="img-fluid w-75" Src="@($"data:image/png;base64, {BookModel.FileData}")" Alt="@BookModel.Title" />
@@ -71,7 +71,13 @@
                                     <MudText Style="font-size:14px; color:#6ebc63;">&#10004; В наличии</MudText>
                                     <MudText Style="font-size:24px; font-weight:800">@BookModel.Price &#8381;</MudText>
                                     <div class="pt-2 pr-3" style="margin-top:20px;">
-                                        <MudButton Variant="Variant.Filled" Color="Color.Info" FullWidth="true" OnClick="(async() => await AddBookToCart(BookModel.Id, BookModel.Title))"><MudIcon Icon="@Icons.Filled.ShoppingCart" /> В корзину</MudButton>
+                                        <MudButton Link="@(!_user.Identity.IsAuthenticated ? "/Identity/Account/Login" : null)"
+                                               Variant="Variant.Filled" Color="Color.Info"
+                                               FullWidth="true"
+                                               OnClick="(async() => await AddBookToCartAsync(BookModel.Id, BookModel.Title))">
+                                            <MudIcon Icon="@Icons.Filled.ShoppingCart" />
+                                            В корзину
+                                        </MudButton>
                                     </div>
                                 </div>
                             </MudPaper>
@@ -100,7 +106,6 @@
         </div>
     }
 
-    // TODO сделать отзывы
     <div class="mt-4 border-bottom">
         <MudText Style="font-weight:700; font-size:20px;">Отзывы</MudText>
     </div>
@@ -109,16 +114,17 @@
         foreach (var feedback in Feedbacks)
         {
             <div class="row mt-3 border-bottom">
-                <div class="col-3" style="word-break:break-word;">
-                    <MudText>@feedback.User.UserName</MudText>
-                    <MudText>@feedback.DateFeedback.ToShortDateString()</MudText>
+                <div class="col-md-3 col-12" style="word-break:break-word;">
+                    <MudText Style="line-height: 24px; font-weight: 700;">@feedback.User.UserName</MudText>
+                    <MudText Style="font-size: 14px; line-height: 24px; color: #7d8290;">@feedback.DateFeedback.ToString("D").Split(',')[^1]</MudText>
+
 
                     <div class="mb-1 d-flex">
                         <MudRating ReadOnly="true" DisableRipple="true" SelectedValue="@feedback.Rating" />
                         <MudText>@feedback.Rating</MudText>
                     </div>
                 </div>
-                <div class="col-9" style="word-break:break-word;">
+                <div class="col-md-3 col-12" style="word-break:break-word;">
                     <MudText>@feedback.Message</MudText>
                 </div>
             </div>

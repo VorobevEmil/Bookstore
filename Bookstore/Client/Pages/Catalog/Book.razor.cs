@@ -26,12 +26,20 @@ namespace Bookstore.Client.Pages.Catalog
         {
             _user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
 
+            if (_user.Identity.IsAuthenticated)
+            {
+                _http = HttpClientFactory.CreateClient("Bookstore.ServerAPI");
 
-            _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+            }
+            else
+            {
+                _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+            }
+
             Feedbacks = await _http.GetFromJsonAsync<List<FeedbackModel>>($"api/Feedback/GetFeedbacksByBookId/{Id}");
             BookModel = await _http.GetFromJsonAsync<BookModel>($"api/Book/GetById/{Id}");
         }
-        private async Task AddBookToCart(int bookId, string? bookTitle)
+        private async Task AddBookToCartAsync(int bookId, string? bookTitle)
         {
             if (_user.Identity.IsAuthenticated)
             {

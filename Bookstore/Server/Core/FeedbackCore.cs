@@ -18,8 +18,25 @@ namespace Bookstore.Server.Core
             var result = await _context.Feedbacks
                 .Include(t => t.User)
                 .Where(t => t.BookOrder.BooksId == bookId)
+                .OrderByDescending(t => t.DateFeedback)
                 .ToListAsync();
 
+            result.ForEach(t => t.User.Feedbacks = null);
+            return result;
+        }
+
+        public async Task<List<FeedbackModel>> GetFeedbacksByUserId(string userId)
+        {
+            var result = await _context.Feedbacks
+                .Include(t => t.User)
+                .Include(t => t.BookOrder)
+                .ThenInclude(t => t.Books)
+                .Where(t => t.UserId == userId)
+                .OrderByDescending(t => t.DateFeedback)
+                .ToListAsync();
+
+            result.ForEach(t => t.BookOrder.Feedbacks = null);
+            result.ForEach(t => t.BookOrder.Books.Orders = null);
             result.ForEach(t => t.User.Feedbacks = null);
             return result;
         }

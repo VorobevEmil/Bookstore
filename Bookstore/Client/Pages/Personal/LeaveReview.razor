@@ -15,19 +15,7 @@
     {
 
         <MudText Style="font-size:22px; font-weight:600; color:#363636; line-height:34px; height:100%; display:flex; align-items:center;">Оставить отзыв на купленную книгу</MudText>
-        @*<div class="row">
-            @foreach (var book in Books)
-            {
 
-            <div class="col-2">
-            <MudImage Src="@($"data:image/png;base64, {book.FileData}")" Class="img-fluid" />
-            </div>
-            <div class="col-10">
-            <MudText>@book.Title</MudText>
-            <MudText>@book.Price</MudText>
-            </div>
-            }
-            </div>*@
         @foreach (var bookorder in BooksOrders)
         {
             <div class="row border-bottom mt-2">
@@ -71,7 +59,7 @@
 @code {
     [Inject] HttpClient? Http { get; set; }
     [Inject] NavigationManager? NavigationManager { get; set; }
-    [Inject] IJSRuntime JSRuntime { get; set; }
+    [Inject] IJSRuntime? JSRuntime { get; set; }
     [Inject] AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
     public List<BookModelOrderModel>? BooksOrders { get; set; }
     private bool _visableDialog;
@@ -90,6 +78,8 @@
     {
 
         BooksOrders = await Http.GetFromJsonAsync<List<BookModelOrderModel>>("api/BookOrder/GetBooksOrdersForWhichUserHasNotLeftReview");
+        BooksOrders.Reverse();
+
         var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
         _userId = user.Claims.First(t => t.Type == "sub").Value;
     }

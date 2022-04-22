@@ -59,7 +59,7 @@ namespace Bookstore.Client.Pages
             }
         }
 
-        private async Task AddBookToCart(int bookId, string? bookTitle)
+        private async Task AddBookToCartAsync(int bookId, string? bookTitle)
         {
             if (_user.Identity.IsAuthenticated)
             {

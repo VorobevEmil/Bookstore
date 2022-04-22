@@ -85,7 +85,7 @@
         if (result == true)
         {
             await Http.PostAsJsonAsync($"api/{ControllerName}/Delete", Entity);
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/admin");
         }
     }
 }
