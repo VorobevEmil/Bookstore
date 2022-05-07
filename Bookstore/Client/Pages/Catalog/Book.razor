@@ -31,22 +31,16 @@
                                 <MudText Style="font-size:16px;">@BookModel.Id</MudText>
                             </div>
                             <div class="col-lg-4 col-6">
-                                <MudText Style="font-size:16px; color: #7d8290;">Автор</MudText>
+                                <MudText Style="font-size:16px; color: #7d8290;">Издательство</MudText>
                             </div>
                             <div class="col-lg-8 col-6">
-                                <MudText Style="font-size:16px;">@BookModel.Author.Title</MudText>
+                                <MudLink Href="@($"/catalog/publishing-house/{BookModel.PublishingHouseId}")" Color="Color.Default" Style="font-size:16px; line-height: 24px; color: #7d8290">@BookModel.PublishingHouse.Title</MudLink>
                             </div>
                             <div class="col-lg-4 col-6">
                                 <MudText Style="font-size:16px; color: #7d8290;">Раздел</MudText>
                             </div>
                             <div class="col-lg-8 col-6">
                                 <MudText Style="font-size:16px;">@BookModel.Catalog.Title</MudText>
-                            </div>
-                            <div class="col-lg-4 col-6">
-                                <MudText Style="font-size:16px; color: #7d8290;">Издательство</MudText>
-                            </div>
-                            <div class="col-lg-8 col-6">
-                                <MudText Style="font-size:16px;">@BookModel.PublishingHouse.Title</MudText>
                             </div>
                             <div class="col-lg-4 col-6">
                                 <MudText Style="font-size:16px; color: #7d8290;">Год издания</MudText>
@@ -124,7 +118,7 @@
                         <MudText>@feedback.Rating</MudText>
                     </div>
                 </div>
-                <div class="col-md-3 col-12" style="word-break:break-word;">
+                <div class="col-md-9 col-12" style="word-break:break-word;">
                     <MudText>@feedback.Message</MudText>
                 </div>
             </div>

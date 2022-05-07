@@ -1,0 +1,49 @@
+﻿@page "/catalog/publishing-house/{id:int}"
+
+@if (PublishingHouseModel != null)
+{
+    <MudDivider Style="margin-top:30px; " Class="mud-theme-dark" />
+
+    <div class="pt-5">
+        <MudText Align="Align.Center" Style="font-size:28px; margin-bottom:16px; font-weight:400;">Все книги издательства @PublishingHouseModel.Title</MudText>
+        <MudGrid>
+            @foreach (var book in PublishingHouseModel.Books)
+            {
+                <MudItem lg="3" sm="6" xs="12">
+                    <MudPaper Elevation="2" Class="pa-4" Width="100%" Height="100%">
+                        <MudLink Href="@($"catalog/book/{book.Id}")">
+                            <MudImage Class="rounded mx-auto d-block" Src="@($"data:image/png;base64, {book.FileData}")" Alt="@book.Title" Height="300" Width="192" />
+                        </MudLink>
+                        <div class="p-3 d-flex flex-column">
+                            <MudText Style="font-weight: bold;">@book.Price р.</MudText>
+                            <MudLink Href="@($"catalog/book/{book.Id}")" Color="Color.Default">@book.Title</MudLink>
+                            <MudLink Href="@($"/catalog/author/{book.Author.Id}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@book.Author.Title</MudLink>
+                            <div class="pt-2 pr-3">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">В корзину</MudButton>
+                            </div>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </div>
+
+}
+
+@code {
+    [Inject] private IHttpClientFactory? HttpClientFactory { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public PublishingHouseModel? PublishingHouseModel { get; set; }
+
+    private HttpClient? _http;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+        PublishingHouseModel = await _http.GetFromJsonAsync<PublishingHouseModel>($"api/PublishingHouse/GetById/{Id}");
+    }
+
+}

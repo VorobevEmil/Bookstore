@@ -19,6 +19,7 @@ namespace Bookstore.Server.Core
                 .Where(t => t.UserId == userId)
                 .Include(t => t.Books)
                 .ThenInclude(t => t.Books)
+                .OrderByDescending(t => t.OrderDate)
                 .ToListAsync();
 
             orders.ForEach(t => t.Books.ForEach(x => x.Orders = null));

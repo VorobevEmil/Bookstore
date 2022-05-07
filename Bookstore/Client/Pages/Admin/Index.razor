@@ -1,5 +1,5 @@
 ﻿@page "/Admin"
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 @inject HttpClient Http
 
 <PageTitle>Панель Администратора</PageTitle>
@@ -7,6 +7,7 @@
 @if (Authors != null && PublishingHouses != null && Catalogs != null && Books != null)
 {
     <div class="container">
+        <MudText Style="font-weight: 600; font-size: 36px;">Панель администратора</MudText>
         <GenericTable TEntity="AuthorModel" Entities="Authors" Title="Авторы" LinkEdit="Author">
             <ChildHeaderContent>
                 <MudTh>Id</MudTh>
