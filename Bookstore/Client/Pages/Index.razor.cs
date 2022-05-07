@@ -14,32 +14,53 @@ namespace Bookstore.Client.Pages
         [Inject] private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
         [Inject] private NavigationManager? NavigationManager { get; set; }
         [Inject] private ISnackbar? Snackbar { get; set; }
+        private HttpClient? HttpClient { get; set; }
 
-        public List<BookModel>? Books { get; set; }
-        public List<BookModel>? SelectedBooks { get; set; }
-        public List<CatalogModel>? Catalogs { get; set; }
-        private HttpClient? _http;
+        private List<BookModel>? Books { get; set; }
+        private List<BookModel>? SelectedBooks { get; set; }
+        private List<CatalogModel>? Catalogs { get; set; }
+
         private ClaimsPrincipal? _user;
 
+        private List<int> _childCatalogId = new List<int>();
 
         protected override async Task OnInitializedAsync()
         {
-            _user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+            _user = await GetCurrentUser();
 
-            if (_user.Identity.IsAuthenticated)
-            {
-                _http = HttpClientFactory.CreateClient("Bookstore.ServerAPI");
+            HttpClient = CreateHttpClientDependingOnUserAuthorization();
 
-            }
-            else
-            {
-                _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
-            }
+            await SetValueToEntitiesFromApi();
 
-            Catalogs = await _http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetAll");
-            Books = await _http.GetFromJsonAsync<List<BookModel>>("api/Book/GetAll");
+        }
+
+        private async Task<ClaimsPrincipal> GetCurrentUser()
+        {
+            return (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        }
+
+        private HttpClient CreateHttpClientDependingOnUserAuthorization()
+        {
+            return _user.Identity.IsAuthenticated ?
+                HttpClientFactory.CreateClient("Bookstore.ServerAPI") :
+                HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
+        }
+
+        private async Task SetValueToEntitiesFromApi()
+        {
+            Catalogs = await GetCatalogsFromApi();
+            Books = await GetBooksFromApi();
             SelectedBooks = Books;
+        }
 
+        private async Task<List<CatalogModel>> GetCatalogsFromApi()
+        {
+            return await HttpClient.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetAll");
+        }
+
+        private async Task<List<BookModel>> GetBooksFromApi()
+        {
+            return await HttpClient.GetFromJsonAsync<List<BookModel>>("api/Book/GetAll");
         }
 
 
@@ -49,9 +70,9 @@ namespace Bookstore.Client.Pages
             categoryTitle = treeItemData?.Title ?? null;
             if (treeItemData != null)
             {
-                childCatalogId.Clear();
+                _childCatalogId.Clear();
                 AddChildCatalog(treeItemData);
-                SelectedBooks = Books.Where(t => t.CatalogId == treeItemData.Id || childCatalogId.Contains((int)t.CatalogId)).ToList();
+                SelectedBooks = Books.Where(t => t.CatalogId == treeItemData.Id || _childCatalogId.Contains((int)t.CatalogId)).ToList();
             }
             else
             {
@@ -61,28 +82,28 @@ namespace Bookstore.Client.Pages
 
         private async Task AddBookToCartAsync(int bookId, string? bookTitle)
         {
-            if (_user.Identity.IsAuthenticated)
+            if (!_user.Identity.IsAuthenticated)
+                return;
+
+            var userId = _user.Claims.First(t => t.Type == "sub").Value;
+            CartModel cartModel = new CartModel() { BookId = bookId, UserId = userId };
+
+            await HttpClient.PostAsJsonAsync("api/Cart/Save", cartModel);
+
+            Snackbar.Configuration.PreventDuplicates = false;
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
+            Snackbar.Add($"Книга {bookTitle} добавлена в корзину", Severity.Info, configure: (configure =>
             {
-                var userId = _user.Claims.First(t => t.Type == "sub").Value;
-                CartModel cartModel = new CartModel() { BookId = bookId, UserId = userId };
-
-                await _http.PostAsJsonAsync("api/Cart/Save", cartModel);
-
-                Snackbar.Configuration.PreventDuplicates = false;
-                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
-                Snackbar.Add($"Книга {bookTitle} добавлена в корзину", Severity.Info, configure: (configure =>
+                configure.Icon = Icons.Filled.Bookmark;
+                configure.Onclick = (snackbar) =>
                 {
-                    configure.Icon = Icons.Filled.Bookmark;
-                    configure.Onclick = (snackbar) =>
-                    {
-                        NavigationManager.NavigateTo("/personal/cart");
-                        return Task.CompletedTask;
-                    };
-                }));
-            }
+                    NavigationManager.NavigateTo("/personal/cart");
+                    return Task.CompletedTask;
+                };
+            }));
         }
 
-        private List<int> childCatalogId = new List<int>();
+
         private void AddChildCatalog(TreeItemData treeItemData)
         {
             if (treeItemData.TreeItems == null)
@@ -90,7 +111,7 @@ namespace Bookstore.Client.Pages
 
             foreach (var item in treeItemData.TreeItems)
             {
-                childCatalogId.Add(item.Id);
+                _childCatalogId.Add(item.Id);
                 AddChildCatalog(item);
 
             }

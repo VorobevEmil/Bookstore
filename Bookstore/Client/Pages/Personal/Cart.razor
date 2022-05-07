@@ -14,8 +14,8 @@
 }
 else if (UserCarts.Count > 0)
 {
-    <MudGrid>
-        <MudItem xs="8">
+    <div class="row">
+        <div class="col-lg-8 col-12">
             <div>
                 <div class="row">
                     <div class="col">
@@ -33,18 +33,17 @@ else if (UserCarts.Count > 0)
             </div>
 
             <div class="mt-2">
-                <MudGrid>
+                <div class="row">
                     @foreach (var cart in UserCarts)
                     {
-                        <MudItem xs="12">
-                            <MudGrid>
-
-                                <MudItem xs="2">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-md-2 col-12">
                                     <MudLink Href="@($"catalog/book/{cart.Book.Id}")">
                                         <MudImage Class="rounded mx-auto d-block" Height="142" Width="91" Src="@($"data:image/png;base64, {cart.Book.FileData}")"></MudImage>
                                     </MudLink>
-                                </MudItem>
-                                <MudItem xs="9" Style="position:relative;">
+                                </div>
+                                <div class="col-md-9 col-10" style="position:relative; min-height:100px;">
                                     <MudLink Class="d-flex" Href="@($"catalog/book/{cart.Book.Id}")" Color="Color.Default">@cart.Book.Title</MudLink>
                                     <MudLink Class="d-flex" Href="@($"/catalog/author/{cart.Book.AuthorId}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@cart.Book.Author.Title</MudLink>
                                     <div style="position:absolute; top:10px; right:0;">
@@ -57,20 +56,17 @@ else if (UserCarts.Count > 0)
                                             <MudText Style="display:inline; font-size:12px; ">Удалить</MudText>
                                         </div>
                                     }
-                                </MudItem>
-                                <MudItem xs="1">
+                                </div>
+                                <div class="col-md-1 col-2">
                                     <MudCheckBox T="bool" CheckedChanged="((e) => SelectCart(e, cart))"></MudCheckBox>
-                                </MudItem>
-                            </MudGrid>
-                            <MudDivider />
-                        </MudItem>
+                                </div>
+                            </div>
+                        </div>
                     }
-                </MudGrid>
+                </div>
             </div>
-
-        </MudItem>
-
-        <MudItem xs="4">
+        </div>
+        <div class="col-lg-4 col-12">
             <MudText Typo="Typo.h5" GutterBottom="true">Выбранные книги</MudText>
             <MudPaper Class="d-flex flex-column" Outlined="true">
                 <MudList>
@@ -109,8 +105,8 @@ else if (UserCarts.Count > 0)
                     </div>
                 </div>
             </MudPaper>
-        </MudItem>
-    </MudGrid>
+        </div>
+    </div>
 }
 else
 {

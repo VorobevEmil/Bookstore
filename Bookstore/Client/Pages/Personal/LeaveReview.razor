@@ -18,20 +18,24 @@
 
         @foreach (var bookorder in BooksOrders)
         {
-            <div class="row border-bottom mt-2">
-                <div class="col-1 mb-1">
+            <div class="row border-bottom py-2">
+                <div class="col-lg-1 col-md-2 col-12 mb-1">
                     <MudLink Href="@($"catalog/book/{bookorder.Books.Id}")">
                         <MudImage Class="img-fluid" Src="@($"data:image/png;base64, {bookorder.Books.FileData}")"></MudImage>
                     </MudLink>
                 </div>
-                <div class="col-9" style="position:relative;">
-                    <MudLink Class="d-flex" Href="@($"catalog/book/{bookorder.Books.Id}")" Color="Color.Default">@bookorder.Books.Title</MudLink>
+                <div class="col-lg-9 col-md-8 col-12" style="position:relative;">
 
-                    <div style="position:absolute; top:10px; right:0;">
-                        <MudText>Оплачено @bookorder.Books.Price &#8381;</MudText>
+                    <div class="d-flex" style="justify-content:space-between">
+                        <div>
+                            <MudLink Href="@($"catalog/book/{bookorder.Books.Id}")" Color="Color.Default">@bookorder.Books.Title</MudLink>
+                        </div>
+                        <div>
+                            <MudText>Оплачено @bookorder.Books.Price &#8381;</MudText>
+                        </div>
                     </div>
                 </div>
-                <div class="col-2">
+                <div class="col-md-2 col-12">
                     <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="(() =>OpenDialog(bookorder))">Оставить отзыв</MudButton>
                 </div>
             </div>
