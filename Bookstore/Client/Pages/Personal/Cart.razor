@@ -37,7 +37,7 @@ else if (UserCarts.Count > 0)
                     @foreach (var cart in UserCarts)
                     {
                         <div class="col-12">
-                            <div class="row">
+                            <div class="row m-1">
                                 <div class="col-md-2 col-12">
                                     <MudLink Href="@($"catalog/book/{cart.Book.Id}")">
                                         <MudImage Class="rounded mx-auto d-block" Height="142" Width="91" Src="@($"data:image/png;base64, {cart.Book.FileData}")"></MudImage>

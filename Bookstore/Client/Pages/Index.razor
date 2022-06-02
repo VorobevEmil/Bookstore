@@ -21,14 +21,18 @@
                             {
                                 <div class="col-lg-3 col-sm-6 col-12 my-2">
                                     <MudPaper Elevation="2" Class="pa-4" Height="100%">
-                                        <MudLink Href="@($"catalog/book/{book.Id}")">
-                                            <MudImage Class="rounded mx-auto d-block img-fluid" Src="@($"data:image/png;base64, {book.FileData}")" Alt="@book.Title" />
-                                        </MudLink>
-                                        <div class="p-3 d-flex flex-column">
-                                            <MudText Style="font-weight: bold;">@book.Price р.</MudText>
-                                            <MudLink Href="@($"catalog/book/{book.Id}")" Color="Color.Default">@book.Title</MudLink>
-                                            <MudLink Href="@($"/catalog/author/{book.AuthorId}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@book.Author.Title</MudLink>
-                                            <div class="pt-2">
+                                        <div style="display: flex; justify-content: space-between; flex-direction: column; height: 100%;">
+                                            <div>
+                                                <MudLink Href="@($"catalog/book/{book.Id}")">
+                                                    <MudImage Class="rounded mx-auto d-block img-fluid" Src="@($"data:image/png;base64, {book.FileData}")" Alt="@book.Title" />
+                                                </MudLink>
+                                                <div class="p-3 d-flex flex-column">
+                                                    <MudText Style="font-weight: bold;">@book.Price р.</MudText>
+                                                    <MudLink Href="@($"catalog/book/{book.Id}")" Color="Color.Default">@book.Title</MudLink>
+                                                    <MudLink Href="@($"/catalog/author/{book.AuthorId}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@book.Author.Title</MudLink>
+                                                </div>
+                                            </div>
+                                            <div class="px-3 pt-2">
                                                 <MudButton Link="@(!_user.Identity.IsAuthenticated ? "/Identity/Account/Login" : null)"
                                                    OnClick="(async() => await AddBookToCartAsync(book.Id, book.Title))"
                                                    Variant="Variant.Filled"
