@@ -15,12 +15,16 @@
 
         <MudTextField Label="Аннотация" Class="mt-3" @bind-Value="model.Annotation" For="@(() => model.Annotation)" Lines="10" />
 
-        <MudSelect T="int?" Placeholder="Выберите автора" Class="mt-3" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.AuthorId" For="@(() => model.AuthorId)">
-            @foreach (var author in Authors)
-            {
-                <MudSelectItem Value="(int?)author.Id">@author.Title</MudSelectItem>
-            }
-        </MudSelect>
+        <MudAutocomplete T="AuthorModel"
+                     SearchFunc="@SearchAuthor"
+                     ToStringFunc="@(e => e.Title)"
+                     ValueChanged="SelectAuthor"
+                     Margin="Margin.Dense"
+                     Adornment="Adornment.Start"
+                     Class="mt-5"
+                     SelectValueOnTab="true"
+                     Placeholder="Выберите автора"
+                     AdornmentIcon="@Icons.Material.Filled.Person" AdornmentColor="Color.Default" Variant="Variant.Outlined" InputMode="InputMode.search" />
 
         <MudSelect T="int?" Placeholder="Выберите издание" Class="mt-3" AnchorOrigin="Origin.BottomCenter" @bind-Value="model.PublishingHouseId" For="@(() => model.PublishingHouseId)">
             @foreach (var publishingHouse in PublishingHouses)
@@ -29,7 +33,7 @@
             }
         </MudSelect>
 
-        <CatalogTreeView Title="Выберите категорию" SetValueCallback="SetCategoryId"/>
+        <CatalogTreeView Title="Выберите категорию" SetValueCallback="SetCategoryId" />
 
         <MudTextField Label="Количество страниц" Class="mt-3" Variant="Variant.Text" Adornment="Adornment.Start" @bind-Value="model.NumberPages" For="@(() => model.NumberPages)" />
 
@@ -44,8 +48,10 @@
     [Parameter]
     public int Id { get; set; }
 
-    public List<AuthorModel>? Authors { get; set; }
-    public List<PublishingHouseModel>? PublishingHouses { get; set; }
+    [Inject] private HttpClient HttpClient { get; set; }
+
+    private List<AuthorModel>? Authors { get; set; }
+    private List<PublishingHouseModel>? PublishingHouses { get; set; }
 
     private BaseGenericForm<BookModel>? bookForm;
 
@@ -58,5 +64,18 @@
     private void SetCategoryId(TreeItemData item)
     {
         bookForm.Entity.CatalogId = item != null && item.TreeItems == null ? item.Id : null;
+    }
+
+    private async Task<IEnumerable<AuthorModel>> SearchAuthor(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return new List<AuthorModel>();
+        var authors = await HttpClient.GetFromJsonAsync<List<AuthorModel>>($"api/Author/GetAllByTitle/{value}");
+        return authors;
+    }
+
+    private void SelectAuthor(AuthorModel authorModel)
+    {
+        bookForm.Entity.AuthorId = authorModel.Id;
     }
 }

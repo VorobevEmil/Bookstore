@@ -45,7 +45,7 @@ else if (UserCarts.Count > 0)
                                 </div>
                                 <div class="col-md-9 col-10" style="position:relative; min-height:100px;">
                                     <MudLink Class="d-flex" Href="@($"catalog/book/{cart.Book.Id}")" Color="Color.Default">@cart.Book.Title</MudLink>
-                                    <MudLink Class="d-flex" Href="@($"/catalog/author/{cart.Book.AuthorId}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@cart.Book.Author.Title</MudLink>
+                                    <MudLink Class="d-flex" Href="@($"catalog/author/{cart.Book.AuthorId}")" Color="Color.Default" Style="font-size:13px; color: #7d8290; line-height: 24px;">@cart.Book.Author.Title</MudLink>
                                     <div style="position:absolute; top:10px; right:0;">
                                         <MudText>@cart.Book.Price &#8381;</MudText>
                                     </div>

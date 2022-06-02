@@ -31,5 +31,17 @@ namespace Bookstore.Server.Core
                     .ToList()
             };
         }
+
+        public async Task<List<AuthorModel>> GetAllByTitleAsync(string title)
+        {
+            return await _context.Authors
+                .Where(t => t.Title.Contains(title))
+                .Select(t => new AuthorModel()
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                })
+                .ToListAsync();
+        }
     }
 }

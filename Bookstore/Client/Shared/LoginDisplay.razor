@@ -7,27 +7,61 @@
 <AuthorizeView>
     <Authorized>
         @{
-            List<(string link, string title, string icon)> authLink = new List<(string link, string title, string icon)>() {
-                ("authentication/profile", context.User.Identity.Name.Split(' ')[0], Icons.Outlined.SentimentSatisfied),
-                ("personal/order", "Заказы", Icons.Outlined.MarkunreadMailbox),
-                ("personal/cart", "Корзина", Icons.Outlined.ShoppingCart),
-            };
+            List<(string? link, string title, string icon, List<(string link, string title)>? childLinks)> authLink = new List<(string? link, string title, string icon, List<(string link, string title)>?)>()
+        {
+        (null, context!.User!.Identity!.Name!.Split(' ')[0], Icons.Outlined.SentimentSatisfied, new List<(string link, string title)>()
+        {
+        ("authentication/profile","Личный кабинет"),
+        ("user-review","Мои отзывы"),
+        ("leave-review", "Оставить отзывы"),
+        }),
+        ("personal/order", "Заказы", Icons.Outlined.MarkunreadMailbox, null),
+        ("personal/cart", "Корзина", Icons.Outlined.ShoppingCart, null),
+        };
+
+            if (context.User.Claims.Any(t => t.Value == "Admin"))
+            {
+                authLink[0].childLinks.Add(new("/admin", "Панель управления"));
+            }
         }
         @foreach (var link in authLink)
         {
 
             <li class="nav-item" style="padding:0px 10px;">
-                <MudLink Href="@link.link" Color="Color.Default">
-                    <div style="display:flex; flex-direction: column;" class="align-items-lg-center text-lg-center">
-                        <MudIcon Icon="@link.icon" Color="Color.Dark" />
-                        <MudText Color="Color.Dark">@link.title</MudText>
-                    </div>
-                </MudLink>
+                @if (link.childLinks == null)
+                {
+                    <MudLink Href="@link.link" Color="Color.Default">
+                        <div style="display:flex; flex-direction: column;" class="align-items-lg-center text-lg-center">
+                            <MudIcon Icon="@link.icon" Color="Color.Dark" />
+                            <MudText Color="Color.Dark">@link.title</MudText>
+                        </div>
+                    </MudLink>
+                }
+                else
+                {
+
+                    <MudMenu AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                        <ActivatorContent>
+                            <div style="display:flex; flex-direction: column;" class="align-items-lg-center text-lg-center">
+                                <MudIcon Icon="@link.icon" Color="Color.Dark" />
+                                <MudText Color="Color.Dark">@link.title</MudText>
+                            </div>
+                        </ActivatorContent>
+                        <ChildContent>
+                            @foreach (var childLink in link.childLinks)
+                            {
+                                <MudMenuItem>
+                                    <MudLink Href="@childLink.link" Color="Color.Default"><MudText Color="Color.Dark">@childLink.title</MudText></MudLink>
+                                </MudMenuItem>
+                            }
+                        </ChildContent>
+                    </MudMenu>
+                }
             </li>
         }
 
         <li class="nav-item" style="padding:0px 10px;">
-            <MudLink Color="Color.Default" @onclick="BeginSignOut" Style="cursor:pointer;">
+            <MudLink Color="Color.Default" @onclick="(async() => await BeginSignOutAsync())" Style="cursor:pointer;">
                 <div style="display:flex; flex-direction: column;" class="align-items-lg-center">
                     <MudIcon Icon="@Icons.Outlined.ExitToApp" Color="Color.Dark" />
                     <MudText Color="Color.Dark">Выйти</MudText>
@@ -36,6 +70,14 @@
         </li>
     </Authorized>
     <NotAuthorized>
+        @{
+            List<(string link, string title, string icon)> notAuthLink = new List<(string, string, string)>()
+            {
+                    ("authentication/login", "Войти", Icons.Outlined.Login),
+                    ("authentication/register", "Регистрация", Icons.Outlined.HowToReg),
+            };
+        }
+
         @foreach (var link in notAuthLink)
         {
             <li class="nav-item" style="padding:0px 10px;">
@@ -51,13 +93,7 @@
 </AuthorizeView>
 
 @code {
-    private List<(string link, string title, string icon)> notAuthLink = new List<(string, string, string)>()
-    {
-            ("authentication/login", "Войти", Icons.Outlined.Login),
-            ("authentication/register", "Регистрация", Icons.Outlined.HowToReg),
-    };
-
-    private async Task BeginSignOut(MouseEventArgs args)
+    private async Task BeginSignOutAsync()
     {
         await SignOutManager.SetSignOutState();
         Navigation.NavigateTo("authentication/logout");
