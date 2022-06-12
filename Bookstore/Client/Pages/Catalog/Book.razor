@@ -86,19 +86,9 @@
     <div class="row" style="padding-top:20px;">
         <div class="col-lg-6 col-12">
             <MudText Style="font-size: 24px; font-weight:900;">О товаре</MudText>
-            <MudText Style="font-size: 16px;">@BookModel.AboutProduct</MudText>
+            <MudText Style="font-size:16px; line-height:28px;">@((MarkupString)Markdig.Markdown.ToHtml(BookModel.AboutProduct))</MudText>
         </div>
     </div>
-
-    @if (BookModel.Annotation != null)
-    {
-        <div class="row" style="padding-top:20px;">
-            <div class="col-lg-6 col-12">
-                <MudText Style="font-size: 24px; font-weight:900;">Аннотация</MudText>
-                <MudText Style="font-size: 16px;">@BookModel.Annotation</MudText>
-            </div>
-        </div>
-    }
 
     <div class="mt-4 border-bottom">
         <MudText Style="font-weight:700; font-size:20px;">Отзывы</MudText>

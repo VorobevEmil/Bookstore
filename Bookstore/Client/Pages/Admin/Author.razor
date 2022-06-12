@@ -6,8 +6,10 @@
     <MudTextField Label="Полное имя" Class="mt-3" @bind-Value="model.Title" For="@(() => model.Title)" />
 
     <UploadImage @bind-FileDataValue="authorForm.Entity.FileData" TitleImage="authorForm.Entity.Title" />
-    
-    <MudTextField Label="Об авторе" Class="mt-3" @bind-Value="model.AboutAuthor" For="@(() => model.AboutAuthor)" Lines="5" />
+
+    <MudText>Об авторе</MudText>
+    <MarkdownEditor @bind-Value="model.AboutAuthor" SpellChecker="false" />
+
 
 </BaseGenericForm>
 

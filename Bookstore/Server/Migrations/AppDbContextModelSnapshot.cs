@@ -112,9 +112,6 @@ namespace Bookstore.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Annotation")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("AuthorId")
                         .IsRequired()
                         .HasColumnType("INTEGER");

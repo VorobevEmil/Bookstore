@@ -5,13 +5,13 @@
     <div class="row">
         <div class="col-lg-2 col-md-3 col-12">
             @if (AuthorModel.FileData != null)
-                {
-                    <MudImage Class="rounded-circle mx-auto d-block" Src="@($"data:image/png;base64, {AuthorModel.FileData}")" Alt="@AuthorModel.Title" Width="160" />
-                }
+            {
+                <MudImage Class="rounded-circle mx-auto d-block" Src="@($"data:image/png;base64, {AuthorModel.FileData}")" Alt="@AuthorModel.Title" Width="160" />
+            }
         </div>
         <div class="col-lg-7 col-md-9 col-12">
-             <MudText Style="font-size:32px; line-height:40px; margin-bottom:16px; font-weight:600;">@AuthorModel.Title</MudText>
-                <MudText Style="font-size:16px; line-height:28px;">@AuthorModel.AboutAuthor</MudText>
+            <MudText Style="font-size:32px; line-height:40px; margin-bottom:16px; font-weight:600;">@AuthorModel.Title</MudText>
+            <MudText Style="font-size:16px; line-height:28px;">@((MarkupString)Markdig.Markdown.ToHtml(AuthorModel.AboutAuthor))</MudText>
         </div>
     </div>
     <MudDivider Style="margin-top:30px; " Class="mud-theme-dark" />

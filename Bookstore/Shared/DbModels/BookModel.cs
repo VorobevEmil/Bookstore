@@ -9,7 +9,6 @@ namespace Bookstore.Shared.DbModels
         public override string? Title { get; set; }
         [Required(ErrorMessage = "Напишите описание книги")]
         public string? AboutProduct { get; set; }
-        public string? Annotation { get; set; }
         [Required(ErrorMessage = "Выберите автора")]
         public int? AuthorId { get; set; }
         public AuthorModel? Author { get; set; }

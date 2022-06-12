@@ -10,10 +10,8 @@
 
         <UploadImage @bind-FileDataValue="bookForm.Entity.FileData" TitleImage="bookForm.Entity.Title" />
 
-
-        <MudTextField Label="Описание" Class="mt-3" @bind-Value="model.AboutProduct" For="@(() => model.AboutProduct)" Lines="10" />
-
-        <MudTextField Label="Аннотация" Class="mt-3" @bind-Value="model.Annotation" For="@(() => model.Annotation)" Lines="10" />
+        <MudText>Описание книги</MudText>
+        <MarkdownEditor @bind-Value="model.AboutProduct" SpellChecker="false" />
 
         <MudAutocomplete T="AuthorModel"
                      SearchFunc="@SearchAuthor"

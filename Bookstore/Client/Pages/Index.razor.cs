@@ -10,19 +10,21 @@ namespace Bookstore.Client.Pages
 {
     public partial class Index
     {
-        [Inject] private IHttpClientFactory? HttpClientFactory { get; set; }
-        [Inject] private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
-        [Inject] private NavigationManager? NavigationManager { get; set; }
-        [Inject] private ISnackbar? Snackbar { get; set; }
-        private HttpClient? HttpClient { get; set; }
+#nullable disable
+        [Inject] private IHttpClientFactory HttpClientFactory { get; set; }
+        [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; }
+        [Inject] private ISnackbar Snackbar { get; set; }
+        private HttpClient HttpClient { get; set; }
 
-        private List<BookModel>? Books { get; set; }
-        private List<BookModel>? SelectedBooks { get; set; }
-        private List<CatalogModel>? Catalogs { get; set; }
+        private List<BookModel> Books { get; set; }
+        private List<BookModel> SelectedBooks { get; set; }
+        private List<CatalogModel> Catalogs { get; set; }
 
-        private ClaimsPrincipal? _user;
+        private ClaimsPrincipal _user;
 
         private List<int> _childCatalogId = new List<int>();
+#nullable enable
 
         protected override async Task OnInitializedAsync()
         {
