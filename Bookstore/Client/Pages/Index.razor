@@ -2,7 +2,7 @@
 
 <PageTitle>Каталог книг в интернет магазине Книжная лавка</PageTitle>
 
-@if (SelectedBooks != null && Catalogs != null)
+@if (Books != null)
 {
     <div class="pt-2">
         <div class="container-fluid">
@@ -17,7 +17,7 @@
                             <MudText Style="font-size:36px;font-weight:600;" Class="pt-2">@categoryTitle</MudText>
                         }
                         <div class="row">
-                            @foreach (var book in SelectedBooks)
+                            @foreach (var book in Books)
                             {
                                 <div class="col-lg-3 col-sm-6 col-12 my-2">
                                     <MudPaper Elevation="2" Class="pa-4" Height="100%">
@@ -45,6 +45,9 @@
                                     </MudPaper>
                                 </div>
                             }
+                        </div>
+                        <div class="text-center mt-2">
+                            <MudButton Variant="Variant.Filled" OnClick="(async ()=> await SetValueToEntitiesFromApi())" Color="Color.Success" Disabled="_disableLoadMoreBooks" >Загрузить ещё</MudButton>
                         </div>
                     </div>
                 </div>

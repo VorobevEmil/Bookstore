@@ -16,6 +16,7 @@
         <MudAutocomplete T="AuthorModel"
                      SearchFunc="@SearchAuthor"
                      ToStringFunc="@(e => e.Title)"
+                     Value = "bookForm.Entity.Author"
                      ValueChanged="SelectAuthor"
                      Margin="Margin.Dense"
                      Adornment="Adornment.Start"
@@ -74,6 +75,7 @@
 
     private void SelectAuthor(AuthorModel authorModel)
     {
+        bookForm.Entity.Author = authorModel;
         bookForm.Entity.AuthorId = authorModel.Id;
     }
 }

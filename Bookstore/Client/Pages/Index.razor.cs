@@ -17,14 +17,12 @@ namespace Bookstore.Client.Pages
         [Inject] private ISnackbar Snackbar { get; set; }
         private HttpClient HttpClient { get; set; }
 
-        private List<BookModel> Books { get; set; }
-        private List<BookModel> SelectedBooks { get; set; }
-        private List<CatalogModel> Catalogs { get; set; }
-
+        private List<BookModel> Books { get; set; } = new List<BookModel>();
         private ClaimsPrincipal _user;
-
-        private List<int> _childCatalogId = new List<int>();
 #nullable enable
+        private int _pageNumber;
+        private bool _disableLoadMoreBooks;
+        private Func<Task<List<BookModel>>> GetBooksFromApi;
 
         protected override async Task OnInitializedAsync()
         {
@@ -32,7 +30,7 @@ namespace Bookstore.Client.Pages
 
             HttpClient = CreateHttpClientDependingOnUserAuthorization();
 
-            await SetValueToEntitiesFromApi();
+            await FilterBooksByCategory(null);
 
         }
 
@@ -50,36 +48,32 @@ namespace Bookstore.Client.Pages
 
         private async Task SetValueToEntitiesFromApi()
         {
-            Catalogs = await GetCatalogsFromApi();
-            Books = await GetBooksFromApi();
-            SelectedBooks = Books;
-        }
+            var books = await GetBooksFromApi();
+            if (books.Count < 12)
+                _disableLoadMoreBooks = true;
 
-        private async Task<List<CatalogModel>> GetCatalogsFromApi()
-        {
-            return await HttpClient.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetAll");
-        }
-
-        private async Task<List<BookModel>> GetBooksFromApi()
-        {
-            return await HttpClient.GetFromJsonAsync<List<BookModel>>("api/Book/GetAll");
+            Books.AddRange(books);
+            _pageNumber++;
         }
 
 
         private string? categoryTitle;
-        private void FilterBooksByCategory(TreeItemData treeItemData)
+        private async Task FilterBooksByCategory(TreeItemData treeItemData)
         {
+            _pageNumber = 0;
+            _disableLoadMoreBooks = false;
+            Books = new List<BookModel>();
+
             categoryTitle = treeItemData?.Title ?? null;
             if (treeItemData != null)
             {
-                _childCatalogId.Clear();
-                AddChildCatalog(treeItemData);
-                SelectedBooks = Books.Where(t => t.CatalogId == treeItemData.Id || _childCatalogId.Contains((int)t.CatalogId)).ToList();
+                GetBooksFromApi = (async () => await HttpClient.GetFromJsonAsync<List<BookModel>>($"api/Book/GetBooksByCatalogId/{treeItemData.Id}?page={_pageNumber}&sizepage=12"));
             }
             else
             {
-                SelectedBooks = Books;
+                GetBooksFromApi = (async () => await HttpClient.GetFromJsonAsync<List<BookModel>>($"api/Book/GetBooksOnOnePage?page={_pageNumber}&sizepage=12"));
             }
+            await SetValueToEntitiesFromApi();
         }
 
         private async Task AddBookToCartAsync(int bookId, string? bookTitle)
@@ -103,20 +97,6 @@ namespace Bookstore.Client.Pages
                     return Task.CompletedTask;
                 };
             }));
-        }
-
-
-        private void AddChildCatalog(TreeItemData treeItemData)
-        {
-            if (treeItemData.TreeItems == null)
-                return;
-
-            foreach (var item in treeItemData.TreeItems)
-            {
-                _childCatalogId.Add(item.Id);
-                AddChildCatalog(item);
-
-            }
         }
     }
 }

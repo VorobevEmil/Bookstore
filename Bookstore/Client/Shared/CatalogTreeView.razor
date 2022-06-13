@@ -3,7 +3,7 @@
 @if (Catalogs != null)
 {
     <MudText Class="mt-3 ml-5" Style="font-weight:800">@Title</MudText>
-    <MudTreeView T="TreeItemData" Items="TreeItems" SelectedValueChanged="SetValueCallback" Dense="Dense">
+    <MudTreeView T="TreeItemData" ServerData="(async(t) => await LoadServerDataAsync(t))" Items="TreeItems" SelectedValueChanged="SetValueCallback" Dense="Dense">
         <ItemTemplate>
             <MudTreeViewItem Items="@context.TreeItems" Value="@context" Text="@context.Title" EndTextTypo="@Typo.caption" />
         </ItemTemplate>
@@ -31,8 +31,17 @@
     {
         _http = HttpClientFactory.CreateClient("Bookstore.AnonymousAPI");
 
-        Catalogs = await _http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetAll");
+        Catalogs = await _http.GetFromJsonAsync<List<CatalogModel>>("api/Catalog/GetCatalogsParent");
 
-        TreeItemData.SetTreeItems(Catalogs.Where(t => t.CatalogModelId == null).ToList(), TreeItems);
+        TreeItemData.SetTreeItems(Catalogs, TreeItems);
+    }
+
+    private async Task<HashSet<TreeItemData>> LoadServerDataAsync(TreeItemData parentNode)
+    {
+        parentNode.TreeItems =
+            (await _http.GetFromJsonAsync<List<CatalogModel>>($"api/Catalog/GetCatalogsByParent/{parentNode.Id}"))
+                .Select(t => new TreeItemData(t.Id, t.Title))
+                .ToHashSet();
+        return parentNode.TreeItems;
     }
 }

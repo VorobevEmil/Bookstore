@@ -14,6 +14,20 @@ namespace Bookstore.Server.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("GetBooksByCatalogId/{catalogId}")]
+        public async Task<ActionResult<List<BookModel>>> GetBooksByCatalogIdAsync(int catalogId, int page, int sizepage)
+        {
+            try
+            {
+                return Ok(await _core.GetBooksByCatalogIdAsync(catalogId, page, sizepage));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [AllowAnonymous]
         [HttpGet("GetAllByTitle/{title}")]
         public async Task<ActionResult<List<BookModel>>> GetAllByTitleAsync(string title)
         {
@@ -27,6 +41,18 @@ namespace Bookstore.Server.Controllers
             }
         }
 
-
+        [AllowAnonymous]
+        [HttpGet("GetBooksOnOnePage")]
+        public async Task<ActionResult<List<BookModel>>> GetBooksOnOnePageAsync(int page, int sizepage)
+        {
+            try
+            {
+                return Ok(await _core.GetBooksOnOnePageAsync(page, sizepage));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
