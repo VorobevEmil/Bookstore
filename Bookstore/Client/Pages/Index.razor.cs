@@ -17,7 +17,7 @@ namespace Bookstore.Client.Pages
         [Inject] private ISnackbar Snackbar { get; set; }
         private HttpClient HttpClient { get; set; }
 
-        private List<BookModel> Books { get; set; } = new List<BookModel>();
+        private List<BookModel> Books { get; set; }
         private ClaimsPrincipal _user;
 #nullable enable
         private int _pageNumber;
@@ -52,7 +52,10 @@ namespace Bookstore.Client.Pages
             if (books.Count < 12)
                 _disableLoadMoreBooks = true;
 
-            Books.AddRange(books);
+            if (Books == null)
+                Books = books;
+            else
+                Books.AddRange(books);
             _pageNumber++;
         }
 
@@ -62,7 +65,7 @@ namespace Bookstore.Client.Pages
         {
             _pageNumber = 0;
             _disableLoadMoreBooks = false;
-            Books = new List<BookModel>();
+            Books = null;
 
             categoryTitle = treeItemData?.Title ?? null;
             if (treeItemData != null)

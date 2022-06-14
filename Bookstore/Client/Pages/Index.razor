@@ -2,15 +2,32 @@
 
 <PageTitle>Каталог книг в интернет магазине Книжная лавка</PageTitle>
 
-@if (Books != null)
-{
-    <div class="pt-2">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-2 d-lg-block d-flex flex-column align-items-center col-12">
-                    <CatalogTreeView Title="Категории" Dense="true" SetValueCallback="FilterBooksByCategory" />
-                </div>
-                <div class="col-lg-8 col-12">
+<div class="pt-2">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2 d-lg-block d-flex flex-column align-items-center col-12">
+                <CatalogTreeView Title="Категории" Dense="true" SetValueCallback="FilterBooksByCategory" />
+            </div>
+            <div class="col-lg-8 col-12">
+                @if (Books == null)
+                {
+                    <div style="text-align:center; margin-top:10%">
+                        <MudText Typo="Typo.h5">Загружаем книги</MudText>
+
+                        <MudImage Src="loading.gif" Height="300"></MudImage>
+                    </div>
+                }
+                else if (Books.Count == default)
+                {
+                    <div style="text-align:center; margin-top:10%">
+                        <MudImage Src="404.gif" Height="300"></MudImage>
+
+                        <MudText Typo="Typo.h5">К сожалению книги по данной категории не найдены ;(</MudText>
+
+                    </div>
+                }
+                else
+                {
                     <div class="pt-5">
                         @if (categoryTitle != null)
                         {
@@ -47,11 +64,11 @@
                             }
                         </div>
                         <div class="text-center mt-2">
-                            <MudButton Variant="Variant.Filled" OnClick="(async ()=> await SetValueToEntitiesFromApi())" Color="Color.Success" Disabled="_disableLoadMoreBooks" >Загрузить ещё</MudButton>
+                            <MudButton Variant="Variant.Filled" OnClick="(async ()=> await SetValueToEntitiesFromApi())" Color="Color.Success" Disabled="_disableLoadMoreBooks">Загрузить ещё</MudButton>
                         </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
-}
+</div>
