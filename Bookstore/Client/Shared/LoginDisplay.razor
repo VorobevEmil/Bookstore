@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using System.Security.Claims
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -9,7 +10,7 @@
         @{
             List<(string? link, string title, string icon, List<(string link, string title)>? childLinks)> authLink = new List<(string? link, string title, string icon, List<(string link, string title)>?)>()
         {
-        (null, context!.User!.Identity!.Name!.Split(' ')[0], Icons.Outlined.SentimentSatisfied, new List<(string link, string title)>()
+        (null, context.User.Identity!.Name!, Icons.Outlined.SentimentSatisfied, new List<(string link, string title)>()
         {
         ("authentication/profile","Личный кабинет"),
         ("user-review","Мои отзывы"),
@@ -21,7 +22,7 @@
 
             if (context.User.Claims.Any(t => t.Value == "Admin"))
             {
-                authLink[0].childLinks.Add(new("/admin", "Панель управления"));
+                authLink[0].childLinks!.Add(new("/admin", "Панель управления"));
             }
         }
         @foreach (var link in authLink)
@@ -72,10 +73,10 @@
     <NotAuthorized>
         @{
             List<(string link, string title, string icon)> notAuthLink = new List<(string, string, string)>()
-            {
-                    ("authentication/login", "Войти", Icons.Outlined.Login),
-                    ("authentication/register", "Регистрация", Icons.Outlined.HowToReg),
-            };
+        {
+        ("authentication/login", "Войти", Icons.Outlined.Login),
+        ("authentication/register", "Регистрация", Icons.Outlined.HowToReg),
+        };
         }
 
         @foreach (var link in notAuthLink)

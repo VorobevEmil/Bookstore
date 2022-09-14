@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Core;
+﻿using Bookstore.Server.Service;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +11,11 @@ namespace Bookstore.Server.Controllers
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
-        private readonly OrderCore _core;
+        private readonly OrderService _core;
 
-        public OrderController(OrderCore core)
+        public OrderController(OrderService service)
         {
-            _core = core;
+            _core = service;
         }
 
         [HttpGet("GetAll")]

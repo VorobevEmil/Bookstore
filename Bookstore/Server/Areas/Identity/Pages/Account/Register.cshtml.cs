@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Bookstore.Shared.DbModels;
+using Bookstore.Server.Data;
 
 namespace Bookstore.Server.Areas.Identity.Pages.Account
 {
@@ -23,13 +24,15 @@ namespace Bookstore.Server.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly AppDbContext _context;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            AppDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -37,6 +40,7 @@ namespace Bookstore.Server.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         /// <summary>
@@ -64,14 +68,24 @@ namespace Bookstore.Server.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            public string Username => FirstName + " " + LastName;
-
+            [Required]
+            [Display(Name = "Пол")]
+            public string Sex { get; set; } = null!;
             [Required]
             [Display(Name = "Имя")]
-            public string FirstName { get; set; }
+            public string FirstName { get; set; } = null!;
             [Required]
             [Display(Name = "Фамилия")]
-            public string LastName { get; set; }
+            public string SecondName { get; set; } = null!;
+            [Display(Name = "Отчество")]
+            public string? ThirdName { get; set; }
+            [Required]
+            [Display(Name = "Дата рождения")]
+            public DateTime BirthDate { get; set; }
+
+            [Required]
+            [Display(Name = "Логин")]
+            public string Login { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -117,15 +131,31 @@ namespace Bookstore.Server.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Login, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("Пользователь создал новую учетную запись с паролем.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
+
+                    UserProfile userProfile = new UserProfile()
+                    {
+                        IdUser = userId,
+                        FirstName = Input.FirstName,
+                        SecondName = Input.SecondName,
+                        ThirdName = Input.ThirdName,
+                        Sex = Input.Sex,
+                        BirthDate = Input.BirthDate,
+                        RegDate = DateTime.Now,
+                        Age = (DateTime.Now - Input.BirthDate).Days / 365
+                    };
+
+                    await _context.UserProfiles.AddAsync(userProfile);
+                    await _context.SaveChangesAsync();
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -134,8 +164,8 @@ namespace Bookstore.Server.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "Подтвердите свой адрес электронной почты",
+                        $"Пожалуйста подтвердите свой аккаунт <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>нажав сюда</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -165,9 +195,9 @@ namespace Bookstore.Server.Areas.Identity.Pages.Account
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+                throw new InvalidOperationException($"Не удается создать экземпляр '{nameof(ApplicationUser)}'. " +
+                    $"Убедитесь, что '{nameof(ApplicationUser)}' не является абстрактным классом и имеет конструктор без параметров или, альтернативно " +
+                    $"переопределить страницу регистрации в /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
 
@@ -175,7 +205,7 @@ namespace Bookstore.Server.Areas.Identity.Pages.Account
         {
             if (!_userManager.SupportsUserEmail)
             {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
+                throw new NotSupportedException("Для пользовательского интерфейса по умолчанию требуется хранилище пользователей с поддержкой по электронной почте.");
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
         }

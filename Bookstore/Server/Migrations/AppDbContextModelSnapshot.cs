@@ -282,6 +282,40 @@ namespace Bookstore.Server.Migrations
                     b.ToTable("PublishingHouses");
                 });
 
+            modelBuilder.Entity("Bookstore.Shared.DbModels.UserProfile", b =>
+                {
+                    b.Property<string>("IdUser")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("RegDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SecondName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Sex")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ThirdName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("IdUser");
+
+                    b.ToTable("UserProfiles");
+                });
+
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.DeviceFlowCodes", b =>
                 {
                     b.Property<string>("UserCode")
@@ -653,6 +687,17 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Bookstore.Shared.DbModels.UserProfile", b =>
+                {
+                    b.HasOne("Bookstore.Shared.DbModels.ApplicationUser", "IdUserNavigation")
+                        .WithOne("Profile")
+                        .HasForeignKey("Bookstore.Shared.DbModels.UserProfile", "IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IdUserNavigation");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -711,6 +756,9 @@ namespace Bookstore.Server.Migrations
                     b.Navigation("Feedbacks");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("Profile")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Bookstore.Shared.DbModels.AuthorModel", b =>

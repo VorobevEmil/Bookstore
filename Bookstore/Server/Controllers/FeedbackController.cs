@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Core;
+﻿using Bookstore.Server.Service;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +11,11 @@ namespace Bookstore.Server.Controllers
     [Route("api/[controller]")]
     public class FeedbackController : ControllerBase
     {
-        private readonly FeedbackCore _core;
+        private readonly FeedbackService _service;
 
-        public FeedbackController(FeedbackCore core)
+        public FeedbackController(FeedbackService service)
         {
-            _core = core;
+            _service = service;
         }
 
         [AllowAnonymous]
@@ -24,7 +24,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetFeedbacksByBookId(bookId));
+                return Ok(await _service.GetFeedbacksByBookId(bookId));
             }
             catch (Exception ex)
             {
@@ -37,7 +37,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetFeedbacksByUserId(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
+                return Ok(await _service.GetFeedbacksByUserId(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                await _core.SaveAsync(feedback);
+                await _service.SaveAsync(feedback);
                 return Ok();
             }
             catch (Exception)

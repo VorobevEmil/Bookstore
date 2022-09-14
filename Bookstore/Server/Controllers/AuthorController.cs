@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Core;
+﻿using Bookstore.Server.Service;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,10 +6,10 @@ namespace Bookstore.Server.Controllers
 {
     public class AuthorController : BaseEntityController<AuthorModel>
     {
-        private readonly AuthorCore _core;
-        public AuthorController(AuthorCore core) : base(core)
+        private readonly AuthorService _service;
+        public AuthorController(AuthorService service) : base(service)
         {
-            _core = core;
+            _service = service;
         }
 
         [HttpGet("GetAllByTitle/{title}")]
@@ -17,7 +17,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetAllByTitleAsync(title));
+                return Ok(await _service.GetAllByTitleAsync(title));
             }
             catch (Exception ex)
             {

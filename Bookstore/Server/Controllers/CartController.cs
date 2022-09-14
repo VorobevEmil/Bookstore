@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Core;
+﻿using Bookstore.Server.Service;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +11,11 @@ namespace Bookstore.Server.Controllers
     [Route("api/[controller]")]
     public class CartController : ControllerBase
     {
-        private readonly CartCore _core;
+        private readonly CartService _service;
 
-        public CartController(CartCore core)
+        public CartController(CartService service)
         {
-            _core = core;
+            _service = service;
         }
 
         [HttpGet("GetAll")]
@@ -23,7 +23,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetAllAsync(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
+                return Ok(await _service.GetAllAsync(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
             }
             catch (Exception ex)
             {
@@ -36,7 +36,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                var result = await _core.GetByIdAsync(id);
+                var result = await _service.GetByIdAsync(id);
                 if (result != null)
                     return Ok(result);
 
@@ -53,7 +53,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                await _core.SaveAsync(cart);
+                await _service.SaveAsync(cart);
                 return Ok();
             }
             catch (Exception)
@@ -67,7 +67,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                await _core.DeleteAsync(cart);
+                await _service.DeleteAsync(cart);
                 return Ok("Сущность удалена");
             }
             catch (Exception ex)

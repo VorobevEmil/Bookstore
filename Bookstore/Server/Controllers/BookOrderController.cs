@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Core;
+﻿using Bookstore.Server.Service;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +11,11 @@ namespace Bookstore.Server.Controllers
     [Route("api/[controller]")]
     public class BookOrderController : ControllerBase
     {
-        private readonly BookOrderCore _core;
+        private readonly BookOrderCore _service;
 
-        public BookOrderController(BookOrderCore core)
+        public BookOrderController(BookOrderCore service)
         {
-            _core = core;
+            _service = service;
         }
 
         [HttpGet("GetBooksOrdersForWhichUserHasNotLeftReview")]
@@ -23,7 +23,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetBooksOrdersForWhichUserHasNotLeftReview(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
+                return Ok(await _service.GetBooksOrdersForWhichUserHasNotLeftReview(User.Claims.First(t => t.Type == ClaimTypes.NameIdentifier).Value));
             }
             catch (Exception ex)
             {
@@ -37,7 +37,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetAllAsync(orderId));
+                return Ok(await _service.GetAllAsync(orderId));
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                var result = await _core.GetByIdAsync(id);
+                var result = await _service.GetByIdAsync(id);
                 if (result != null)
                     return Ok(result);
 
@@ -67,7 +67,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                await _core.SaveAsync(order);
+                await _service.SaveAsync(order);
                 return Ok();
             }
             catch (Exception)
@@ -81,7 +81,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                await _core.DeleteAsync(order);
+                await _service.DeleteAsync(order);
                 return Ok("Сущность удалена");
             }
             catch (Exception ex)

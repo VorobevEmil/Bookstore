@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Core;
+﻿using Bookstore.Server.Service;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +10,11 @@ namespace Bookstore.Server.Controllers
     [Route("api/[controller]")]
     public abstract class BaseEntityController<TEntity> : ControllerBase where TEntity : BaseEntity
     {
-        private readonly BaseCore<TEntity> _core;
+        private readonly BaseService<TEntity> _service;
 
-        public BaseEntityController(BaseCore<TEntity> core)
+        public BaseEntityController(BaseService<TEntity> service)
         {
-            _core = core;
+            _service = service;
         }
 
         [AllowAnonymous]
@@ -23,7 +23,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetAllAsync());
+                return Ok(await _service.GetAllAsync());
             }
             catch (Exception ex)
             {
@@ -37,7 +37,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                var result = await _core.GetByIdAsync(id);
+                var result = await _service.GetByIdAsync(id);
                 if (result != null)
                     return Ok(result);
 
@@ -54,7 +54,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                await _core.SaveAsync(entity);
+                await _service.SaveAsync(entity);
                 return Ok("Сущность сохранена");
             }
             catch (Exception ex)
@@ -68,7 +68,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                await _core.Delete(entity);
+                await _service.Delete(entity);
                 return Ok("Сущность удалена");
             }
             catch (Exception ex)

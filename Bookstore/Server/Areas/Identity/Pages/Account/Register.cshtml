@@ -4,7 +4,7 @@
     ViewData["Title"] = "Регистрация";
 }
 
-<div class="container" style="padding-top:10vh;">
+<div class="container">
     <div class="row">
         <div class="col-md-6 d-none d-md-block">
             <div>
@@ -13,19 +13,41 @@
         </div>
         <div class="col-md-6 col-12">
             <div>
-                <form  id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <h1 class="h3 mb-3 font-weight-normal text-center">Регистрация</h1>
+                    <h1 class="h3 mb-2 font-weight-normal text-center">Регистрация</h1>
                     <div class=mt-1>
                         <label asp-for="Input.FirstName" class="sr-only">Имя</label>
                         <input asp-for="Input.FirstName" type="text" class="form-control" placeholder="Имя" required="" autofocus="">
                         <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                     </div>
                     <div class=mt-1>
-                        <label asp-for="Input.LastName" class="sr-only">Фамилия</label>
-                        <input asp-for="Input.LastName" type="text" class="form-control" placeholder="Фамилия" required="" autofocus="">
-                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        <label asp-for="Input.SecondName" class="sr-only">Фамилия</label>
+                        <input asp-for="Input.SecondName" type="text" class="form-control" placeholder="Фамилия" required="" autofocus="">
+                        <span asp-validation-for="Input.SecondName" class="text-danger"></span>
+                    </div>
+                    <div class=mt-1>
+                        <label asp-for="Input.ThirdName" class="sr-only">Отчество</label>
+                        <input asp-for="Input.ThirdName" type="text" class="form-control" placeholder="Отчество" autofocus="">
+                    </div>
+                    <div class=mt-1>
+                        <label asp-for="Input.Sex" class="sr-only">Пол</label>
+                        <select asp-for="Input.Sex" class="form-control">
+                            <option selected="selected" value="Мужской">Мужской</option>
+                            <option value="Женский">Женский</option>
+                        </select>
+                        <span asp-validation-for="Input.Sex" class="text-danger"></span>
+                    </div>
+                    <div class=mt-1>
+                        <label asp-for="Input.BirthDate" class="sr-only">Дата рождения</label>
+                        <input asp-for="Input.BirthDate" type="date" class="form-control" placeholder="Дата рождения" required="" autofocus="">
+                        <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+                    </div>
+                    <div class=mt-1>
+                        <label asp-for="Input.Login" class="sr-only">Логин</label>
+                        <input asp-for="Input.Login" type="text" class="form-control" placeholder="Логин" required="" autofocus="">
+                        <span asp-validation-for="Input.Login" class="text-danger"></span>
                     </div>
                     <div class=mt-1>
                         <label asp-for="Input.Email" class="sr-only">Адрес эл. почты</label>

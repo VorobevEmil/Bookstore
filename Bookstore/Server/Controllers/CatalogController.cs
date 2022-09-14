@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Core;
+﻿using Bookstore.Server.Service;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +7,10 @@ namespace Bookstore.Server.Controllers
 {
     public class CatalogController : BaseEntityController<CatalogModel>
     {
-        private readonly CatalogCore _core;
-        public CatalogController(CatalogCore core) : base(core)
+        private readonly CatalogService _service;
+        public CatalogController(CatalogService service) : base(service)
         {
-            _core = core;
+            _service = service;
         }
 
         [AllowAnonymous]
@@ -19,7 +19,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetCatalogsParentAsync());
+                return Ok(await _service.GetCatalogsParentAsync());
             }
             catch (Exception ex)
             {
@@ -33,7 +33,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetCatalogsByParentAsync(parentId));
+                return Ok(await _service.GetCatalogsByParentAsync(parentId));
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-﻿using Bookstore.Server.Core;
+﻿using Bookstore.Server.Service;
 using Bookstore.Shared.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +7,10 @@ namespace Bookstore.Server.Controllers
 {
     public class BookController : BaseEntityController<BookModel>
     {
-        private readonly BookCore _core;
-        public BookController(BookCore core) : base(core)
+        private readonly BookService _service;
+        public BookController(BookService service) : base(service)
         {
-            _core = core;
+            _service = service;
         }
 
         [AllowAnonymous]
@@ -19,7 +19,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetBooksByCatalogIdAsync(catalogId, page, sizepage));
+                return Ok(await _service.GetBooksByCatalogIdAsync(catalogId, page, sizepage));
             }
             catch (Exception)
             {
@@ -33,7 +33,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetAllByTitleAsync(title));
+                return Ok(await _service.GetAllByTitleAsync(title));
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace Bookstore.Server.Controllers
         {
             try
             {
-                return Ok(await _core.GetBooksOnOnePageAsync(page, sizepage));
+                return Ok(await _service.GetBooksOnOnePageAsync(page, sizepage));
             }
             catch (Exception ex)
             {
