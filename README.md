@@ -13,7 +13,7 @@
 <h1>Добавление в корзину и покупка книг</h1>
 <img src="https://user-images.githubusercontent.com/86602955/190174608-6012ec0d-46f2-422a-b9ce-aa4000ba4778.gif"/>
 
-<h1>Оставление отзыва, о книге</h1>
+<h1>Добавление отзыва, о книге</h1>
 <img src="https://user-images.githubusercontent.com/86602955/190163943-94ec6941-4472-4ad4-a341-38470b3be5a1.gif"/>
 
 <h1>Добавление книги в админ панели</h1>
